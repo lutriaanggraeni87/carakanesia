@@ -574,8 +574,8 @@ SELESAI & KELUAR
     const dataKirim = {
         nama: namaSiswa || "",
         kelas: kelasSiswa || "",
-        tanggal_pretes: tanggalPretes || "",
-        skor_pretes: skorPretes || "",
+        tanggal_pretes: "",
+        skor_pretes: skorPretes || 0,
         tanggal_post_test: new Date().toLocaleString(),
         skor_post_test: skorPostTest || 0,
         badge_capaian: badgeAkhir || ""
@@ -583,9 +583,6 @@ SELESAI & KELUAR
 
     fetch(URL_SCRIPT, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
         body: JSON.stringify(dataKirim)
     })
     .then(res => res.text())
@@ -597,7 +594,6 @@ SELESAI & KELUAR
         console.error("Gagal kirim:", err);
         alert("GAGAL KIRIM DATA");
     });
-
 }
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
@@ -605,5 +601,6 @@ SELESAI & KELUAR
 </body>
 
 </html>
+
 
 
