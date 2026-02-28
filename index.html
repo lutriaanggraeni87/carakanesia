@@ -1,311 +1,163 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CARAKANESIA PRO</title>
-    
-    <style>
-        :root {
-            --hijau: #15803d;
-            --ungu: #4b0082;
-            --cyan: #00FFFF;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CARAKANESIA PRO</title>
 
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--cyan);
-            margin: 0;
-            text-align: center;
-            overflow-x: hidden;
-        }
+<style>
+:root {
+    --hijau: #15803d;
+    --ungu: #4b0082;
+    --cyan: #00FFFF;
+}
 
-        .layer {
-            position: fixed;
-            inset: 0;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 100;
-            overflow-y: auto;
-        }
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--cyan);
+    margin: 0;
+    text-align: center;
+    overflow-x: hidden;
+}
 
-        /* Menu Utama Background Sesuai File Ibu */
-        #hal-menu {
-            background-image: url('https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 80%;
-            background-blend-mode: overlay;
-            background-color: rgba(255,255,255,0.9);
-        }
+.layer {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+    overflow-y: auto;
+}
 
-        .logo-depan {
-            width: 85%;
-            max-width: 400px;
-            height: auto;
-            margin-bottom: 5px;
-        }
+#hal-menu {
+    background-image: url('https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80%;
+    background-blend-mode: overlay;
+    background-color: rgba(255,255,255,0.9);
+}
 
-        .foto-inovator {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid var(--ungu);
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
+.logo-depan { width: 85%; max-width: 400px; height: auto; margin-bottom: 5px; }
+.foto-inovator { width: 70px; height: 70px; border-radius: 50%; border: 3px solid var(--ungu); object-fit: cover; margin-bottom: 10px; }
 
-        .btn-3d {
-            background: #ff9800;
-            color: white;
-            border: none;
-            padding: 12px;
-            width: 85%;
-            max-width: 350px;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 8px;
-            box-shadow: 0 4px #c27600;
-            font-size: 1rem;
-            position: relative;
-            transition: 0.2s;
-        }
+.btn-3d {
+    background: #ff9800; color: white; border: none; padding: 12px;
+    width: 85%; max-width: 350px; border-radius: 12px; font-weight: bold;
+    cursor: pointer; margin: 8px; box-shadow: 0 4px #c27600; font-size: 1rem;
+    position: relative; transition: 0.2s;
+}
+.btn-3d:active { transform: translateY(4px); box-shadow: 0 0px #c27600; }
 
-        .btn-3d:active {
-            transform: translateY(4px);
-            box-shadow: 0 0px #c27600;
-        }
+input {
+    width: 80%; padding: 12px; margin: 10px 0; border: 3px solid #4ade80;
+    border-radius: 12px; font-size: 1rem; text-align: center;
+}
 
-        input {
-            width: 80%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 3px solid #4ade80;
-            border-radius: 12px;
-            font-size: 1rem;
-            text-align: center;
-        }
+#game { display: none; position: relative; padding: 10px; min-height: 100vh; flex-direction: column; align-items: center; }
 
-        #game {
-            display: none;
-            position: relative;
-            padding: 10px;
-            min-height: 100vh;
-            flex-direction: column;
-            align-items: center;
-        }
+.box {
+    background: white; padding: 15px; border-radius: 25px; border: 5px solid #bbf7d0;
+    width: 95%; max-width: 450px; margin: 10px auto; box-sizing: border-box;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
 
-        .box {
-            background: white;
-            padding: 15px;
-            border-radius: 25px;
-            border: 5px solid #bbf7d0;
-            width: 95%;
-            max-width: 450px;
-            margin: 10px auto;
-            box-sizing: border-box;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
+#canvas-container { position: relative; width: 100%; height: 280px; background: #ffffff; border: 2px dashed #ccc; border-radius: 20px; margin: 10px 0; overflow: hidden; touch-action: none; }
+canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; touch-action: none; }
+#pic { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; pointer-events: none; }
 
-        #canvas-container {
-            position: relative;
-            width: 100%;
-            height: 280px;
-            background: #ffffff;
-            border: 2px dashed #ccc;
-            border-radius: 20px;
-            margin: 10px 0;
-            overflow: hidden;
-            touch-action: none;
-        }
+#avatar-display { width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--hijau); background: white; object-fit: cover; margin-top: 10px; }
 
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            touch-action: none;
-        }
+.zoom-in { animation: zoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes zoom { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        #pic {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        #avatar-display {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            border: 4px solid var(--hijau);
-            background: white;
-            object-fit: cover;
-            margin-top: 10px;
-        }
-
-        /* Animasi Badge dari JAWABAN GEMINI.docx */
-        .zoom-in {
-            animation: zoom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes zoom {
-            0% { transform: scale(0); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .leaderboard-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: white;
-        }
-        .leaderboard-table th, .leaderboard-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        .leaderboard-table th {
-            background-color: var(--ungu);
-            color: white;
-        }
-    </style>
+.leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+.leaderboard-table th, .leaderboard-table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+.leaderboard-table th { background-color: var(--ungu); color: white; }
+</style>
 </head>
 <body>
-    <!-- AUDIO BARU -->
-<audio id="audioBenar" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/human_voices/applause.ogg" type="audio/ogg">
-</audio>
-<audio id="audioSalah" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/cartoon/sad_trombone.ogg" type="audio/ogg">
-</audio>
-<audio id="audioInfo" preload="auto">
-  <source src="https://actions.google.com/sounds/v1/ui/notification.ogg" type="audio/ogg">
-</audio>
 
-    <div id="hal-id" class="layer">
-        <img src="https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN" class="logo-depan">
-        <img src="https://drive.google.com/thumbnail?id=1oe0Y_r3LaSxyMpGTEO9pNmU0MlGQNJx7" class="foto-inovator">
-        <h3 style="color:var(--ungu); margin: 5px 0;">Dibuat oleh : Lutria Anggraeni, S.Pd.Gr.</h3>
-        <p style="font-size: 1rem; margin-bottom: 15px;">UPTD SPF SDN KEJAYAN 1 - PUJER</p>
-        <input type="text" id="namaSiswa" placeholder="Nama Lengkap">
-        <input type="text" id="kelasSiswa" placeholder="Kelas">
-        <button class="btn-3d" onclick="masukMenu()">Masuk Menu</button>
-    </div>
+<!-- AUDIO -->
+<audio id="audioBenar" preload="auto"><source src="https://actions.google.com/sounds/v1/human_voices/applause.ogg" type="audio/ogg"></audio>
+<audio id="audioSalah" preload="auto"><source src="https://actions.google.com/sounds/v1/cartoon/sad_trombone.ogg" type="audio/ogg"></audio>
+<audio id="audioInfo" preload="auto"><source src="https://actions.google.com/sounds/v1/ui/notification.ogg" type="audio/ogg"></audio>
 
-    <div id="hal-panduan" class="layer" style="display:none">
-    <h1 style="color:var(--ungu);">CARA BERMAIN</h1>
-    <img src="https://drive.google.com/thumbnail?id=1tFVFySfANrRU9dNV_nb61ebRaeCWh6oR&sz=w1000" 
-         style="width: 95%; max-width: 600px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
-    
-    <button class="btn-3d" style="background:#4caf50;" onclick="lanjutKeMenu()">SAYA MENGERTI, MULAI!</button>
+<!-- HALAMAN ID -->
+<div id="hal-id" class="layer">
+    <img src="https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN" class="logo-depan">
+    <img src="https://drive.google.com/thumbnail?id=1oe0Y_r3LaSxyMpGTEO9pNmU0MlGQNJx7" class="foto-inovator">
+    <h3 style="color:var(--ungu); margin: 5px 0;">Dibuat oleh : Lutria Anggraeni, S.Pd.Gr.</h3>
+    <p style="font-size: 1rem; margin-bottom: 15px;">UPTD SPF SDN KEJAYAN 1 - PUJER</p>
+    <input type="text" id="namaSiswa" placeholder="Nama Lengkap">
+    <input type="text" id="kelasSiswa" placeholder="Kelas">
+    <button class="btn-3d" onclick="masukMenu()">Masuk Menu</button>
 </div>
 
-    <div id="hal-menu" class="layer" style="display:none">
-        <h1 style="color:var(--ungu);">Menu Utama</h1>
-        <p id="sapaan" style="font-weight:bold; color:var(--hijau); font-size: 1.5rem;"></p>
-        <button class="btn-3d" onclick="mulaiSesi(0)">PRE TEST</button>
-        <button class="btn-3d" onclick="pilihAvatar(1)">AJHER MACA CARAKAN</button>
-        <button class="btn-3d" onclick="pilihAvatar(2)">AJHER NOLES CARAKAN</button>
-        <button class="btn-3d" onclick="mulaiSesi(3)">POST TEST</button> 
-    </div>
+<!-- HALAMAN PANDUAN -->
+<div id="hal-panduan" class="layer" style="display:none">
+<h1 style="color:var(--ungu);">CARA BERMAIN</h1>
+<img src="https://drive.google.com/thumbnail?id=1tFVFySfANrRU9dNV_nb61ebRaeCWh6oR&sz=w1000" style="width: 95%; max-width: 600px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); margin-bottom: 20px;">
+<button class="btn-3d" style="background:#4caf50;" onclick="lanjutKeMenu()">SAYA MENGERTI, MULAI!</button>
+</div>
 
-    <div id="hal-avatar" class="layer" style="display:none">
-        <h2 style="color:var(--ungu)">Pele se daddi kancana : </h2>
-        <div style="display:flex; justify-content:center; gap:20px;">
-            <div onclick="setAvatar('raka')" style="cursor:pointer;"><img id="img-raka" class="ava-pilih"><p><b>RAKA</b></p></div>
-            <div onclick="setAvatar('caca')" style="cursor:pointer;"><img id="img-caca" class="ava-pilih"><p><b>CACA</b></p></div>
-        </div>
-    </div>
+<!-- HALAMAN MENU -->
+<div id="hal-menu" class="layer" style="display:none">
+<h1 style="color:var(--ungu);">Menu Utama</h1>
+<p id="sapaan" style="font-weight:bold; color:var(--hijau); font-size: 1.5rem;"></p>
+<button class="btn-3d" onclick="mulaiSesi(0)">PRE TEST</button>
+<button class="btn-3d" onclick="pilihAvatar(1)">AJHER MACA CARAKAN</button>
+<button class="btn-3d" onclick="pilihAvatar(2)">AJHER NOLES CARAKAN</button>
+<button class="btn-3d" onclick="mulaiSesi(3)">POST TEST</button>
+</div>
 
-    <div id="game">
-        <img id="avatar-display">
-        <div class="box">
-            <div class="nyawa" id="nyawa-disp" style="color: red; font-size: 1.5rem;"></div>
-            <div id="bubble" style="font-weight:bold; padding:10px; border:2px solid #bbf7d0; border-radius:15px; background:#f0fff4;"></div>
-            
-            <div id="canvas-container">
-                <img id="pic">
-                <canvas id="paintCanvas"></canvas>
-            </div>
+<!-- HALAMAN AVATAR -->
+<div id="hal-avatar" class="layer" style="display:none">
+<h2 style="color:var(--ungu)">Pilih Avatar :</h2>
+<div style="display:flex; justify-content:center; gap:20px;">
+    <div onclick="setAvatar('raka')" style="cursor:pointer;"><img id="img-raka" class="ava-pilih"><p><b>RAKA</b></p></div>
+    <div onclick="setAvatar('caca')" style="cursor:pointer;"><img id="img-caca" class="ava-pilih"><p><b>CACA</b></p></div>
+</div>
+</div>
 
-            <div id="fed" style="min-height:50px; font-weight:bold; margin:10px 0;"></div>
-            <button id="btn-hapus" class="btn-3d" style="background:#ef4444; margin:5px auto; display:none;" onclick="hapusGoresan()">🧹 HAPUS GORESAN</button>
-            <input type="text" id="jaw" placeholder="Toles neng ka' dintoh" autocomplete="off">
-            <button class="btn-3d" style="background:var(--hijau); width:100%;" onclick="cek()">CEK JAWABAN</button>
-            
-            <div style="display:flex; justify-content:space-between; width:100%; margin-top:10px;">
-                <button style="background:var(--ungu); color:white; padding:10px; border-radius:10px; width:48%;" onclick="nav(-1)">⬅ BALIK</button>
-                <button style="background:var(--ungu); color:white; padding:10px; border-radius:10px; width:48%;" onclick="nav(1)">LANJUT ➡</button>
-            </div>
-        </div>
-        <button class="btn-3d" style="background:#666;" onclick="balikKeMenu()">KEMBALI KE MENU</button>
-        <div class="footer">Lutria Anggraeni, S.Pd.Gr - UPTD SPF SDN KEJAYAN 1 PUJER</div>
+<!-- GAME DUMMY -->
+<div id="game">
+<img id="avatar-display">
+<div class="box">
+    <div class="nyawa" id="nyawa-disp" style="color: red; font-size: 1.5rem;"></div>
+    <div id="bubble" style="font-weight:bold; padding:10px; border:2px solid #bbf7d0; border-radius:15px; background:#f0fff4;"></div>
+    <div id="canvas-container">
+        <img id="pic">
+        <canvas id="paintCanvas"></canvas>
     </div>
-   
-        <div id="modal-skor" class="layer" style="display:none; background: rgba(0,0,0,0.8); z-index: 1000;">
-        <div class="box" style="text-align: center;">
-            <h2 style="color:var(--ungu)">SKOR KAMU : </h2>
-            <div id="bintang-container" style="font-size: 3rem;"></div>
-            <p id="teks-skor" style="font-size: 1.5rem; font-weight: bold;"></p>
-            <button class="btn-3d" onclick="tutupModalSkor()">LANJUT YUKS!!!</button>
-        </div>
-    </div>
-
-    <div id="hal-reward-1" class="layer" style="display:none;">
-        <img src="https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN" style="width: 160px; margin-bottom: 10px;">
-        <img src="https://drive.google.com/thumbnail?id=1oe0Y_r3LaSxyMpGTEO9pNmU0MlGQNJx7" class="foto-inovator" style="width:110px; height:110px;">
-        <h2 style="color:var(--ungu); margin-top: 15px;">Mator Sakalangkong!</h2>
-        <p style="font-size: 1.1rem; padding: 0 20px;">Selamat <b><span id="nama-selamat"></span></b>,<br>kamu sudah menyelesaikan pembelajaran hari ini!</p>
-        <button class="btn-3d" style="background: var(--hijau); margin-top: 25px;" onclick="keLayarBadge()">LIHAT REWARD 🎁</button>
-    </div>
-
-    <div id="hal-reward-2" class="layer" style="display:none; background: var(--cyan);">
-        <h2 style="color:var(--ungu); font-size: 1.8rem;">BADGE KAMU :</h2>
-        <p id="teks-badge" style="font-weight:bold; font-size: 1.4rem; color: var(--ungu);"></p>
-        <img id="img-badge" class="zoom-in" style="width: 280px;">
-        <button class="btn-3d"
-        style="background: var(--ungu); margin-top: 40px;"
-        onclick="tutupGameKeLeaderboard()">
-SELESAI & KELUAR
-</button>
-    </div>
-
-    <div id="hal-leaderboard" class="layer" style="display:none">
-        <h2 style="color:var(--ungu)">10 Peringkat Teratas</h2>
-        <div id="leaderboard-content" style="width:100%">Memuat data...</div>
-        <p style="color: red; font-size: 0.8rem; margin-top: 10px;">Layar ini akan tertutup otomatis dalam 15 detik...</p>
-    </div>
-
-    <div id="hal-penutup" class="layer" style="display:none;">
-        <img src="https://drive.google.com/thumbnail?id=1-p6tNNEDvogzu4CDrfBMoishdTnuqlQN" style="width: 250px; margin-bottom: 20px;">
-        <h3 style="color:var(--ungu); padding: 20px; line-height: 1.6; text-align: center;">
-            Terima kasih sudah belajar baca tulis carakan madura.<br><br>
-            Belajar carakan, wujud bangga budaya daerah dan langkah nyata lestarikan budaya Indonesia.
-        </h3>
-    </div>
-<div id="modal-info" class="layer" style="display:none; background: rgba(0,0,0,0.6); z-index:2000;">
-    <div class="box zoom-info" style="text-align:center;">
-        <div style="font-size:2.5rem;">⚠</div>
-        <h3 id="teks-info" style="color:var(--ungu); font-size:1.3rem; margin:10px 0;"></h3>
-        <button class="btn-3d" onclick="tutupInfo()">OK</button>
+    <div id="fed" style="min-height:50px; font-weight:bold; margin:10px 0;"></div>
+    <button id="btn-hapus" class="btn-3d" style="background:#ef4444; margin:5px auto; display:none;" onclick="hapusGoresan()">🧹 HAPUS GORESAN</button>
+    <input type="text" id="jaw" placeholder="Tulis jawabanmu" autocomplete="off">
+    <button class="btn-3d" style="background:var(--hijau); width:100%;" onclick="cek()">CEK JAWABAN</button>
+    <div style="display:flex; justify-content:space-between; width:100%; margin-top:10px;">
+        <button style="background:var(--ungu); color:white; padding:10px; border-radius:10px; width:48%;" onclick="nav(-1)">⬅ BALIK</button>
+        <button style="background:var(--ungu); color:white; padding:10px; border-radius:10px; width:48%;" onclick="nav(1)">LANJUT ➡</button>
     </div>
 </div>
-    
-        <script>
-// --- URL SCRIPT & SPREADSHEET ---
-const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
+<button class="btn-3d" style="background:#666;" onclick="balikKeMenu()">KEMBALI KE MENU</button>
+<div class="footer">Lutria Anggraeni, S.Pd.Gr - UPTD SPF SDN KEJAYAN 1 PUJER</div>
+</div>
 
+<!-- MODAL SKOR -->
+<div id="modal-skor" class="layer" style="display:none; background: rgba(0,0,0,0.8); z-index: 1000;">
+<div class="box" style="text-align: center;">
+    <h2 style="color:var(--ungu)">SKOR KAMU : </h2>
+    <div id="bintang-container" style="font-size: 3rem;"></div>
+    <p id="teks-skor" style="font-size: 1.5rem; font-weight: bold;"></p>
+    <button class="btn-3d" onclick="tutupModalSkor()">LANJUT YUKS!!!</button>
+</div>
+</div>
+
+<script>
 // Fungsi masuk menu dari halaman ID
 function masukMenu() {
     const nama = document.getElementById('namaSiswa').value.trim();
@@ -323,24 +175,20 @@ function masukMenu() {
     document.getElementById('hal-panduan').style.display = 'flex';
 }
 
-// Fungsi lanjut dari panduan ke menu utama
 function lanjutKeMenu() {
     document.getElementById('hal-panduan').style.display = 'none';
     document.getElementById('hal-menu').style.display = 'flex';
     document.getElementById('sapaan').innerText = "Halo, " + window.namaSiswa + "!";
 }
 
-// Fungsi kembali ke menu utama dari game
 function balikKeMenu() {
     document.getElementById('game').style.display = 'none';
     document.getElementById('hal-menu').style.display = 'flex';
 }
 
-// Fungsi pilih avatar
 function pilihAvatar(nomor) {
     document.getElementById('hal-menu').style.display = 'none';
     document.getElementById('hal-avatar').style.display = 'flex';
-    // Tambahkan logika jika perlu menyimpan pilihan avatar
 }
 
 function setAvatar(namaAvatar) {
@@ -349,112 +197,288 @@ function setAvatar(namaAvatar) {
     document.getElementById('game').style.display = 'flex';
     document.getElementById('avatar-display').src = "https://drive.google.com/thumbnail?id=ID_AVATAR_" + namaAvatar;
 }
+    function mulaiSesi(l) {
+        curL = l; sk = 0; benar = 0; nyawa = 5; 
+        list = (l === 1) ? [...dL1] : [...soalPre];
+        list.sort(() => Math.random() - 0.5); 
+        document.getElementById('hal-menu').style.display = 'none';
+        document.getElementById('game').style.display = 'flex'; 
+        muat();
+    }
 
-// Navigasi soal / halaman game (dummy)
-function nav(step) {
-    alert("Navigasi ke soal selanjutnya: " + step);
-}
+    function muat() {
+        if(sk >= list.length) { tampilkanReward(); return; } 
+        document.getElementById('jaw').value = "";
+        document.getElementById('fed').innerHTML = ""; 
+        let nDisp = document.getElementById('nyawa-disp');
+        nDisp.innerHTML = "❤".repeat(nyawa); 
+        nDisp.style.display = (curL == 3) ? "none" : "block"; 
+        
+        let tks = ["Tes awal: Napah nyamanah aksara carakan paneka?", "Toles nyama latennah aksara carakan paneka!", "Ajher noles: Patebbel aksara carakannah!", "Tes akhir: Patebbel aksara carakannah, pas jawab!!"];
+        document.getElementById('bubble').innerText = tks[curL]; 
+        document.getElementById('pic').src = "https://drive.google.com/thumbnail?id=" + list[sk].id;
+        document.getElementById('pic').style.opacity = (curL >= 2) ? "0.3" : "1"; 
+        document.getElementById('btn-hapus').style.display = (curL >= 2) ? "block" : "none"; 
+        
+        if(curL > 0) { setTimeout(initCanvas, 300); } 
+        else { document.getElementById('paintCanvas').style.display = "none"; } 
+        hapusGoresan();
+        sudahGores = false;
+    }
 
-// Tombol info / modal
-function tutupInfo() {
-    document.getElementById('modal-info').style.display = 'none';
-}
+    // --- LOGIKA GAME (CANVAS & CEK) ---
+    function initCanvas() {
+        let cv = document.getElementById('paintCanvas');
+        let ct = document.getElementById('canvas-container');
+        cv.style.display = "block"; 
+        cv.width = ct.offsetWidth; cv.height = ct.offsetHeight;
+        let cx = cv.getContext('2d');
+        let dr = false;
+        cx.lineWidth = 7; cx.lineCap = 'round'; cx.strokeStyle = '#4b0082'; 
 
-// Tutup modal skor
-function tutupModalSkor() {
-    document.getElementById('modal-skor').style.display = 'none';
-    document.getElementById('hal-reward-1').style.display = 'flex';
-}
+        const pos = (e) => {
+            let r = cv.getBoundingClientRect();
+            let t = e.touches ? e.touches[0] : e;
+            return { x: t.clientX - r.left, y: t.clientY - r.top };
+        };
 
-// Tombol reward ke badge
-function keLayarBadge() {
-    document.getElementById('hal-reward-1').style.display = 'none';
-    document.getElementById('hal-reward-2').style.display = 'flex';
-}
+        cv.onmousedown = cv.ontouchstart = (e) => { 
+            dr = true; sudahGores = true; cx.beginPath(); 
+            let p = pos(e); cx.moveTo(p.x, p.y); 
+        };
+        cv.onmousemove = cv.ontouchmove = (e) => { 
+            if(dr){ let p = pos(e); cx.lineTo(p.x, p.y); cx.stroke(); } 
+        };
+        window.onmouseup = window.ontouchend = () => { dr = false; }; 
+    }
 
-// Tutup game & ke leaderboard
-function tutupGameKeLeaderboard() {
-    document.getElementById('hal-reward-2').style.display = 'none';
-    document.getElementById('hal-leaderboard').style.display = 'flex';
-    setTimeout(() => document.getElementById('hal-penutup').style.display = 'flex', 15000);
-}
-            
-// Fungsi hitung badge otomatis
-function hitungBadge(nilai){
-    if(nilai >= 50 && nilai <= 55) return "Pemula";
-    if(nilai > 55 && nilai <= 75) return "Madya";
-    if(nilai > 75) return "Utama";
-    return "Terus Belajar";
-}
+    function hapusGoresan() {
+        let cv = document.getElementById('paintCanvas');
+        if(cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); 
+        sudahGores = false;
+    }
 
-// Fungsi kirim data pre-test / post-test
-function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
-    const badge = hitungBadge(nilaiPostTest);
+    function cek() {
+        if(sudahKlik) return;
+        sudahKlik = true; 
 
-    // Mainkan audio sesuai badge
-    if(badge === "Pemula" || badge === "Madya" || badge === "Utama") document.getElementById("audioBenar").play();
-    else document.getElementById("audioInfo").play();
+        if((curL === 2 || curL === 3) && !sudahGores){
+            tampilInfo("⚠ Patebbel carakannah gellu!");
+            sudahKlik = false; return;
+        }
 
-    const data = {
+        let input = document.getElementById('jaw');
+        let j = input.value ? input.value.toLowerCase().trim() : "";
+
+        if(j === list[sk].k){ 
+            benar++; bunyikan("audioBenar"); 
+            document.getElementById('fed').innerHTML = "<span style='color:green; font-size: 2rem;'>Teppa'!</span>"; 
+        } else { 
+            if(curL !== 3) nyawa--;
+            bunyikan("audioSalah");
+            document.getElementById('fed').innerHTML = "<span style='color:red; font-size: 2rem;'>Korang teppa'!</span>"; 
+        }
+
+        if(nyawa <= 0 && curL !== 3) {
+            tampilInfo("Nyabenah ampon sobung! Coba' pole ghi...");
+            setTimeout(() => { location.reload(); }, 1500); return;
+        }
+
+        setTimeout(() => { sk++; muat(); sudahKlik = false; }, 1200); 
+    }
+
+    // --- REWARD & SPREADSHEET ---
+    function tampilkanReward() {
+    let s = benar * 5;
+
+    document.getElementById('bintang-container').innerText =
+        (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
+
+    document.getElementById('teks-skor').innerText = "Skor: " + s;
+    document.getElementById('modal-skor').style.display = 'flex';
+
+    let dataKirim = {
         nama: nama,
-        kelas: kelas,
-        skor_pretes: nilaiPreTest,
-        tanggal_pretes: new Date().toLocaleString("id-ID"),
-        skor_post_test: nilaiPostTest,
-        tanggal_post_test: new Date().toLocaleString("id-ID"),
-        badge_capaian: badge
+        kelas: kelas
     };
+
+    if (curL === 0) {
+        dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
+        dataKirim.skor_pretes = s;
+    }
+
+    if (curL === 3) {
+        dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
+        dataKirim.skor_post_test = s;
+        dataKirim.badge_capaian =
+            (s >= 80) ? "HEBAT" :
+            (s >= 55 ? "BAGUS" : "TERUS BELAJAR");
+    }
 
     fetch(URL_SCRIPT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataKirim)
     })
-    .then(res => console.log("Data tersimpan:", res))
-    .catch(err => console.error("Error kirim data:", err));
+    .then(res => res.text())
+    .then(res => console.log("Data terkirim:", res))
+    .catch(err => console.error(err));
 }
 
-// --- Fungsi otomatis dipanggil setelah sesi selesai ---
-function tampilkanRewardFinal(benar, nama, kelas){
-    const nilai = benar * 5;
-    document.getElementById('bintang-container').innerText = (nilai >= 80) ? "⭐⭐⭐" : (nilai >= 60 ? "⭐⭐" : "⭐");
-    document.getElementById('teks-skor').innerText = "Skor: " + nilai;
-    document.getElementById('modal-skor').style.display = 'flex';
+    function tutupModalSkor() {
+        document.getElementById('modal-skor').style.display = 'none'; 
+        if (curL === 3) { 
+            document.getElementById('nama-selamat').innerText = nama;
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('hal-reward-1').style.display = 'flex'; 
+        } else { balikKeMenu(); }
+    }
 
-    // Kirim data otomatis
-    kirimData(nama, kelas, window.nilaiPreTest || 0, nilai);
+    function keLayarBadge() {
+        let s = benar * 5;
+        let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
+        document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
+        document.getElementById('teks-badge').innerText = (s >= 80) ? "HEBAT!" : (s >= 55 ? "BAGUS!" : "TERUS BELAJAR!"); 
+        document.getElementById('hal-reward-1').style.display = 'none';
+        document.getElementById('hal-reward-2').style.display = 'flex';
+    }
 
-    // Tampilkan badge
-    let badgeId = (nilai >= 75) ? "ID_BADGE_UTAMA" : (nilai > 55 ? "ID_BADGE_MADYA" : "ID_BADGE_PEMULA");
-    document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + badgeId;
-    document.getElementById('teks-badge').innerText = hitungBadge(nilai);
+    function bukaLeaderboardOtomatis() {
+    document.getElementById('hal-leaderboard').style.display = 'flex';
+    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
+        let html = `<table class='leaderboard-table'>
+            <tr>
+                <th>Nama</th>
+                <th>Tgl Pre</th>
+                <th>Skor Pre</th>
+                <th>Tgl Post</th>
+                <th>Skor Post</th>
+                <th>Badge</th>
+            </tr>`;
+        
+        data.forEach(p => { 
+            html += `<tr>
+                <td>${p.nama}</td>
+                <td>${p.tanggal_pretes || '-'}</td>
+                <td>${p.skor_pretes || '-'}</td>
+                <td>${p.tanggal_post_test || '-'}</td>
+                <td>${p.skor_post_test || '-'}</td>
+                <td>${p.badge_capaian || '-'}</td>
+            </tr>`; 
+        });
+        document.getElementById('leaderboard-content').innerHTML = html + "</table>";
+    });
 
-    document.getElementById('hal-reward-1').style.display = 'none';
-    document.getElementById('hal-reward-2').style.display = 'flex';
+    setTimeout(() => {
+        document.getElementById('hal-leaderboard').style.display = 'none';
+        tampilkanLayarPenutup();
+    }, 15000);
 }
 
-// --- Contoh panggilan otomatis (ganti sesuai variabel game) ---
-// Pastikan kamu simpan nilai pre-test sebelumnya di window.nilaiPreTest
-window.namaSiswa = "Siswa Contoh";
-window.kelasSiswa = "Kelas 1";
-window.nilaiPreTest = 80;  // Simpan skor pre-test sebelumnya
-let nilaiPostTest = 78;     // Nilai post-test dari game
+    function tampilkanLayarPenutup() {
+        document.getElementById('hal-penutup').style.display = 'flex';
+        setTimeout(() => { location.reload(); }, 3000);
+    }
 
-// Langsung kirim saat post-test selesai
-kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTest);
+    function balikKeMenu() {
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('hal-menu').style.display = 'flex';
+        sk = 0; nyawa = 5; benar = 0; 
+    }
+
+    function bunyikan(id){
+        const a = document.getElementById(id);
+        if(a) { a.currentTime = 0; a.play().catch(()=>{}); }
+    }
+
+    function tampilInfo(pesan){
+        bunyikan("audioInfo");
+        document.getElementById('teks-info').innerText = pesan; 
+        document.getElementById('modal-info').style.display = 'flex';
+    }
+
+    function tutupInfo(){ document.getElementById('modal-info').style.display = 'none'; }
+    
+    function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
+    function tutupGameKeLeaderboard() {
+
+    let skorAkhir = benar * 5;
+
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
+    form.target = "_blank"; // supaya tidak pindah halaman
+
+    let fields = {
+        nama: nama,
+        kelas: kelas,
+        skor_post_test: skorAkhir,
+        badge_capaian:
+            (skorAkhir >= 80) ? "HEBAT" :
+            (skorAkhir >= 55 ? "BAGUS" : "TERUS BELAJAR")
+    };
+
+    for (let key in fields) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = fields[key];
+        form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    alert("Data berhasil dikirim!");
+}
+            <script>
+// Ganti SCRIPT_URL dengan endpoint Apps Script-mu
+const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+// Fungsi otomatis simpan data
+function simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest) {
+  // Hitung badge
+  let badge = "";
+  if(nilaiPostTest >= 50 && nilaiPostTest <= 55) badge = "Pemula";
+  else if(nilaiPostTest > 55 && nilaiPostTest <= 75) badge = "Madya";
+  else if(nilaiPostTest > 75) badge = "Utama";
+  else badge = "Terus Belajar";
+
+  // Mainkan audio otomatis sesuai badge
+  if(badge === "Pemula" || badge === "Madya" || badge === "Utama") {
+    document.getElementById("audioBenar").play();
+  } else {
+    document.getElementById("audioInfo").play();
+  }
+
+  // Kirim ke Apps Script
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      namaSiswa: namaSiswa,
+      kelasSiswa: kelasSiswa,
+      nilaiPreTest: nilaiPreTest,
+      nilaiPostTest: nilaiPostTest,
+      tanggalPreTest: new Date(),
+      tanggalPostTest: new Date(),
+      badge: badge
+    })
+  })
+  .then(res => console.log("Data tersimpan:", res))
+  .catch(err => console.error(err));
+}
+
+// Contoh panggilan otomatis (ganti sesuai variabel gamemu)
+let namaSiswa = "Siswa Contoh";
+let kelasSiswa = "Kelas 1";
+let nilaiPreTest = 80;  // skor pre-test dari game
+let nilaiPostTest = 78; // skor post-test dari game
+
+simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest);
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
