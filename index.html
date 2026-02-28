@@ -452,35 +452,32 @@
     function tampilkanReward() {
     let s = benar * 5;
 
+    // Tampilkan bintang dan skor
     document.getElementById('bintang-container').innerText =
-        (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-
+        (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐";
     document.getElementById('teks-skor').innerText = "Skor: " + s;
     document.getElementById('modal-skor').style.display = 'flex';
 
+    // Siapkan data untuk dikirim ke spreadsheet
     let dataKirim = {
         nama: nama,
         kelas: kelas
     };
 
-    if (curL === 0) {
+    if (curL === 0) { // pre-test
         dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
         dataKirim.skor_pretes = s;
     }
 
-    if (curL === 3) {
+    if (curL === 3) { // post-test
         dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
         dataKirim.skor_post_test = s;
-        dataKirim.badge_capaian =
-            (s >= 80) ? "HEBAT" :
-            (s >= 55 ? "BAGUS" : "TERUS BELAJAR");
+        dataKirim.badge_capaian = hitungBadge(s); // PENTING: pakai fungsi hitungBadge
     }
 
     fetch(URL_SCRIPT, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataKirim)
     })
     .then(res => res.text())
@@ -498,13 +495,22 @@
     }
 
     function keLayarBadge() {
-        let s = benar * 5;
-        let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
-        document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
-        document.getElementById('teks-badge').innerText = (s >= 80) ? "HEBAT!" : (s >= 55 ? "BAGUS!" : "TERUS BELAJAR!"); 
-        document.getElementById('hal-reward-1').style.display = 'none';
-        document.getElementById('hal-reward-2').style.display = 'flex';
-    }
+        function keLayarBadge() {
+    let s = benar * 5;
+    let badgeText = hitungBadge(s); // gunakan fungsi hitungBadge
+
+    // ID badge bisa tetap seperti sebelumnya
+    let idB;
+    if(badgeText === "Utama") idB = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
+    else if(badgeText === "Madya") idB = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
+    else idB = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"; // Pemula/Terus Belajar
+
+    document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
+    document.getElementById('teks-badge').innerText = badgeText; 
+
+    document.getElementById('hal-reward-1').style.display = 'none';
+    document.getElementById('hal-reward-2').style.display = 'flex';
+}
 
     function bukaLeaderboardOtomatis() {
     document.getElementById('hal-leaderboard').style.display = 'flex';
@@ -540,7 +546,7 @@
 
     function tampilkanLayarPenutup() {
         document.getElementById('hal-penutup').style.display = 'flex';
-        setTimeout(() => { location.reload(); }, 3000);
+        setTimeout(() => { location.reload(); }, 5000);
     }
 
     function balikKeMenu() {
@@ -635,3 +641,4 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
