@@ -279,7 +279,7 @@
         <img id="img-badge" class="zoom-in" style="width: 280px;">
         <button class="btn-3d"
         style="background: var(--ungu); margin-top: 40px;"
-        onclick="alert('TOMBOL TERKLIK')">
+        onclick="tutupGameKeLeaderboard()">
 SELESAI & KELUAR
 </button>
     </div>
@@ -567,13 +567,17 @@ SELESAI & KELUAR
     function tutupInfo(){ document.getElementById('modal-info').style.display = 'none'; }
     
     function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
-    function tutupGameKeLeaderboard() { 
-        document.getElementById('hal-reward-2').style.display = 'none';
-        bukaLeaderboardOtomatis(); 
-    }
+    function tutupGameKeLeaderboard() {
+
+    console.log("FUNGSI TERPANGGIL");
+
+    alert("MASUK FUNCTION");
+
+}
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 
 </html>
+
