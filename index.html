@@ -571,36 +571,39 @@ SELESAI & KELUAR
 
     let skorAkhir = benar * 5;
 
-    fetch("https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            nama: nama,
-            kelas: kelas,
-            skor_post_test: skorAkhir,
-            badge_capaian:
-                (skorAkhir >= 80) ? "HEBAT" :
-                (skorAkhir >= 55 ? "BAGUS" : "TERUS BELAJAR")
-        })
-    })
-    .then(res => res.json())
-    .then(response => {
-        alert("Data berhasil dikirim!");
-        location.reload();
-    })
-    .catch(error => {
-        console.error(error);
-        alert("Gagal kirim data!");
-    });
+    let form = document.createElement("form");
+    form.method = "POST";
+    form.action = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
+    form.target = "_blank"; // supaya tidak pindah halaman
 
+    let fields = {
+        nama: nama,
+        kelas: kelas,
+        skor_post_test: skorAkhir,
+        badge_capaian:
+            (skorAkhir >= 80) ? "HEBAT" :
+            (skorAkhir >= 55 ? "BAGUS" : "TERUS BELAJAR")
+    };
+
+    for (let key in fields) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = fields[key];
+        form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    alert("Data berhasil dikirim!");
 }
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
