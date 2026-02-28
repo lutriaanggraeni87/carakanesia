@@ -182,16 +182,13 @@
     </style>
 </head>
 <body>
-
     <!-- AUDIO BARU -->
 <audio id="audioBenar" preload="auto">
   <source src="https://actions.google.com/sounds/v1/human_voices/applause.ogg" type="audio/ogg">
 </audio>
-
 <audio id="audioSalah" preload="auto">
   <source src="https://actions.google.com/sounds/v1/cartoon/sad_trombone.ogg" type="audio/ogg">
 </audio>
-
 <audio id="audioInfo" preload="auto">
   <source src="https://actions.google.com/sounds/v1/ui/notification.ogg" type="audio/ogg">
 </audio>
@@ -445,7 +442,7 @@ SELESAI & KELUAR
         }
 
         if(nyawa <= 0 && curL !== 3) {
-            tampilInfo("Nyawa sobung! Coba' pole ghi...");
+            tampilInfo("Nyabenah ampon sobung! Coba' pole ghi...");
             setTimeout(() => { location.reload(); }, 1500); return;
         }
 
@@ -598,11 +595,56 @@ SELESAI & KELUAR
 
     alert("Data berhasil dikirim!");
 }
+            <script>
+// Ganti SCRIPT_URL dengan endpoint Apps Script-mu
+const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+
+// Fungsi otomatis simpan data
+function simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest) {
+  // Hitung badge
+  let badge = "";
+  if(nilaiPostTest >= 50 && nilaiPostTest <= 55) badge = "Pemula";
+  else if(nilaiPostTest > 55 && nilaiPostTest <= 75) badge = "Madya";
+  else if(nilaiPostTest > 75) badge = "Utama";
+  else badge = "Terus Belajar";
+
+  // Mainkan audio otomatis sesuai badge
+  if(badge === "Pemula" || badge === "Madya" || badge === "Utama") {
+    document.getElementById("audioBenar").play();
+  } else {
+    document.getElementById("audioInfo").play();
+  }
+
+  // Kirim ke Apps Script
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      namaSiswa: namaSiswa,
+      kelasSiswa: kelasSiswa,
+      nilaiPreTest: nilaiPreTest,
+      nilaiPostTest: nilaiPostTest,
+      tanggalPreTest: new Date(),
+      tanggalPostTest: new Date(),
+      badge: badge
+    })
+  })
+  .then(res => console.log("Data tersimpan:", res))
+  .catch(err => console.error(err));
+}
+
+// Contoh panggilan otomatis (ganti sesuai variabel gamemu)
+let namaSiswa = "Siswa Contoh";
+let kelasSiswa = "Kelas 1";
+let nilaiPreTest = 80;  // skor pre-test dari game
+let nilaiPostTest = 78; // skor post-test dari game
+
+simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest);
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
