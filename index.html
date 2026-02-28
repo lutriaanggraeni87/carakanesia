@@ -457,6 +457,7 @@
         (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐";
     document.getElementById('teks-skor').innerText = "Skor: " + s;
     document.getElementById('modal-skor').style.display = 'flex';
+        };
 
     // Siapkan data untuk dikirim ke spreadsheet
     let dataKirim = {
@@ -641,5 +642,6 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
