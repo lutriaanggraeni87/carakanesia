@@ -306,6 +306,79 @@ SELESAI & KELUAR
 // --- URL SCRIPT & SPREADSHEET ---
 const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
 
+// Fungsi masuk menu dari halaman ID
+function masukMenu() {
+    const nama = document.getElementById('namaSiswa').value.trim();
+    const kelas = document.getElementById('kelasSiswa').value.trim();
+
+    if (!nama || !kelas) {
+        alert("Isi nama dan kelas dulu ya!");
+        return;
+    }
+
+    window.namaSiswa = nama;
+    window.kelasSiswa = kelas;
+
+    document.getElementById('hal-id').style.display = 'none';
+    document.getElementById('hal-panduan').style.display = 'flex';
+}
+
+// Fungsi lanjut dari panduan ke menu utama
+function lanjutKeMenu() {
+    document.getElementById('hal-panduan').style.display = 'none';
+    document.getElementById('hal-menu').style.display = 'flex';
+    document.getElementById('sapaan').innerText = "Halo, " + window.namaSiswa + "!";
+}
+
+// Fungsi kembali ke menu utama dari game
+function balikKeMenu() {
+    document.getElementById('game').style.display = 'none';
+    document.getElementById('hal-menu').style.display = 'flex';
+}
+
+// Fungsi pilih avatar
+function pilihAvatar(nomor) {
+    document.getElementById('hal-menu').style.display = 'none';
+    document.getElementById('hal-avatar').style.display = 'flex';
+    // Tambahkan logika jika perlu menyimpan pilihan avatar
+}
+
+function setAvatar(namaAvatar) {
+    window.avatarTerpilih = namaAvatar;
+    document.getElementById('hal-avatar').style.display = 'none';
+    document.getElementById('game').style.display = 'flex';
+    document.getElementById('avatar-display').src = "https://drive.google.com/thumbnail?id=ID_AVATAR_" + namaAvatar;
+}
+
+// Navigasi soal / halaman game (dummy)
+function nav(step) {
+    alert("Navigasi ke soal selanjutnya: " + step);
+}
+
+// Tombol info / modal
+function tutupInfo() {
+    document.getElementById('modal-info').style.display = 'none';
+}
+
+// Tutup modal skor
+function tutupModalSkor() {
+    document.getElementById('modal-skor').style.display = 'none';
+    document.getElementById('hal-reward-1').style.display = 'flex';
+}
+
+// Tombol reward ke badge
+function keLayarBadge() {
+    document.getElementById('hal-reward-1').style.display = 'none';
+    document.getElementById('hal-reward-2').style.display = 'flex';
+}
+
+// Tutup game & ke leaderboard
+function tutupGameKeLeaderboard() {
+    document.getElementById('hal-reward-2').style.display = 'none';
+    document.getElementById('hal-leaderboard').style.display = 'flex';
+    setTimeout(() => document.getElementById('hal-penutup').style.display = 'flex', 15000);
+}
+            
 // Fungsi hitung badge otomatis
 function hitungBadge(nilai){
     if(nilai >= 50 && nilai <= 55) return "Pemula";
@@ -375,6 +448,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
