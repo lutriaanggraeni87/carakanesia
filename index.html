@@ -569,9 +569,34 @@ SELESAI & KELUAR
     function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
     function tutupGameKeLeaderboard() {
 
-    console.log("FUNGSI TERPANGGIL");
+    console.log("Mengirim data...");
 
-    alert("MASUK FUNCTION");
+    const dataKirim = {
+        nama: namaSiswa || "",
+        kelas: kelasSiswa || "",
+        tanggal_pretes: tanggalPretes || "",
+        skor_pretes: skorPretes || "",
+        tanggal_post_test: new Date().toLocaleString(),
+        skor_post_test: skorPostTest || 0,
+        badge_capaian: badgeAkhir || ""
+    };
+
+    fetch(URL_SCRIPT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataKirim)
+    })
+    .then(res => res.text())
+    .then(res => {
+        console.log("Data terkirim:", res);
+        alert("DATA BERHASIL DIKIRIM");
+    })
+    .catch(err => {
+        console.error("Gagal kirim:", err);
+        alert("GAGAL KIRIM DATA");
+    });
 
 }
 </script>
@@ -580,4 +605,5 @@ SELESAI & KELUAR
 </body>
 
 </html>
+
 
