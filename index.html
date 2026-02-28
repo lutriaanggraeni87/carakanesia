@@ -303,347 +303,79 @@ SELESAI & KELUAR
 </div>
     
         <script>
-    const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
-    
-    // Inisialisasi Variabel Global
-    let targetL = 0;
-    let sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
-    let sudahGores = false, sudahKlik = false;
+// --- URL SCRIPT & SPREADSHEET ---
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
 
-    const audioB = document.getElementById('audioBenar');
-    const audioS = document.getElementById('audioSalah');
-    const audioI = document.getElementById('audioInfo');
+// Fungsi hitung badge otomatis
+function hitungBadge(nilai){
+    if(nilai >= 50 && nilai <= 55) return "Pemula";
+    if(nilai > 55 && nilai <= 75) return "Madya";
+    if(nilai > 75) return "Utama";
+    return "Terus Belajar";
+}
 
-    // Aktifkan audio saat pertama klik (Browser Policy)
-    document.addEventListener("click", function() {
-        [audioB, audioS, audioI].forEach(a => {
-            a.play().then(() => a.pause()).catch(() => {});
-        });
-    }, { once: true });
+// Fungsi kirim data pre-test / post-test
+function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
+    const badge = hitungBadge(nilaiPostTest);
 
-    // Data Soal (Aksara)
-    const soalPre = [{id:"1AML1RqIIY8ZQfPDLZJPkKgLdGs7QdAYL",k:"a"},{id:"1nFZr-1q8LMr9Y9tixrKteUDWAY6TFY4w",k:"na"},{id:"15P_rL_bybu657a22Qe25E3wtgurrEYKy",k:"ca"},{id:"1ZKRGsSs3JCRIztTxnrws-9-icajznpJU",k:"ra"},{id:"121vpw8-avRmbIs8ozsG1LDtB0wtGlSgz",k:"ka"},{id:"1bcn1TAQReGdy_LIDBmty5vejiohoQok0",k:"da"},{id:"14ERILBMIXqePNANgbylVype2vwBCeO3Y",k:"ta"},{id:"14RIN28PJy8tw9nOIzgQYs0hafeSxihde",k:"sa"},{id:"1jUZOOjDc15IxSNPNNpahrPvi2K3Cx-_S",k:"wa"},{id:"1-G0U5-2LmsLkGnqMG1pHZghSOSS-7YPL",k:"la"},{id:"1GJ_gYYENNui-pCZEZph2LgQIvyMjJZK-",k:"pa"},{id:"1vTk50uBuSEgSKuIAbMo1hxrWQriHe6Ce",k:"dha"},{id:"1O3OGN5SsDkAQ_f-veHG5gZNkS48do6Rs",k:"ja"},{id:"11edzUB3AO4HQhyM1hTSaEGHLNx3nyjHw",k:"ya"},{id:"1j42fDXVLB6hpOXySb2ZjxaYL1NIXsGyq",k:"nya"},{id:"1HoSl_E7RFCSU7A3jk672JZDPD0QrFzQC",k:"ma"},{id:"1Hy0k6acjab9-bF773HLhMejnI6VBFt7f",k:"ga"},{id:"1hYrJw2I80lZsfghTBLTlChXrQlmD-Wf6",k:"ba"},{id:"14QjY6qsE2c8aad6lsD-zHdg-m6-34hF7",k:"tha"},{id:"1lySOP5gYsTOUjdRRWUwKF6ns894zJXca",k:"nga"}];
-    const dL1 = [{id:"1_pkOfeu16DT6ZJDLtvrT8w7jS7-8xs_w",k:"a"},{id:"1jjaUt_py0IMwLRXhg_2FQ9Jxm829yelC",k:"na"},{id:"1W-OV7lJGIfeY-XP4_k2zu0nQtbrcGaVW",k:"ca"},{id:"1jnUBAn0-NmcFhtw2E28pqri9drESydre",k:"ra"},{id:"1eY0x4mSbki7iR8h9xZdZYb8Ph66zc1tx",k:"ka"},{id:"1x1cAvuXhCZU06h630fSkIvOgZhe0HbNz",k:"da"},{id:"1cmH-tsmPu-RNxSoNA715Ldi_Wl6ljeFO",k:"ta"},{id:"1ymHs7Fpqn6n47AydkmesiecNiEXc4JKK",k:"sa"},{id:"1ZoWAIopP6AlvOTHneanruoA3NXn9a18h",k:"wa"},{id:"13llrBA3EcosvoiWZyhmBiwkfVl4B0v19",k:"la"},{id:"1HFUHP7c0Cvz6EbT5D2pVnIl5Up3_iHWu",k:"pa"},{id:"18DAdlvrAnNR4aaEHvhf6DkrLrvVAG7Ts",k:"dha"},{id:"1EBC7PRG5BuTbV-lUMExgg9q10m9yi_AN",k:"ja"},{id:"1Xv2lCp0wZTWCMjiXfVm1b_hsFSIGtTE_",k:"ya"},{id:"1ewa7Nr7mj1KNwmKS-F9gGPJcEupaXg5c",k:"nya"},{id:"1JL8-6Y-QUrIQgZe523Z0_xKf8mYK21MK",k:"ma"},{id:"1c9owjS7TVCzTjxC0sMUDgqPRMDOEVJ7U",k:"ga"},{id:"1kEVfkYmXk9QH1kzDrNiX2o-A1ao9jRgf",k:"ba"},{id:"18wZaSduKZ98QukSnpfU9nB4_8oYIcCpC",k:"tha"},{id:"1LG9KpwjEdH_BCEMU4gqoE1pde53yQoxW",k:"nga"}];
+    // Mainkan audio sesuai badge
+    if(badge === "Pemula" || badge === "Madya" || badge === "Utama") document.getElementById("audioBenar").play();
+    else document.getElementById("audioInfo").play();
 
-    const avaMaca = { raka: "1YXVgR8rsRwNTlGhAbGebPxxphQO95BSb", caca: "1TPvKRj-wOyUKgTGz9KbIfez27LhO0jm0" };
-    const avaNulis = { raka: "1JPDbyrKl2GCD-_yCKrFMusHlhgFt99g5", caca: "16jaaIO1-Bk91tDbFV-xOz4gJWsCl0BK_" };
-
-    // --- FUNGSI NAVIGASI ---
-    function masukMenu() {
-        nama = document.getElementById('namaSiswa').value;
-        kelas = document.getElementById('kelasSiswa').value;
-        if(!nama || !kelas) return alert("Isi Nama & Kelas!"); 
-        document.getElementById('sapaan').innerText = "Hai, " + nama; 
-        document.getElementById('hal-id').style.display = 'none';
-        document.getElementById('hal-panduan').style.display = 'flex'; 
-    }
-
-    function lanjutKeMenu() {
-        document.getElementById('hal-panduan').style.display = 'none';
-        document.getElementById('hal-menu').style.display = 'flex'; 
-    }
-
-    function pilihAvatar(lvl) {
-        targetL = lvl; 
-        const d = (lvl==1) ? avaMaca : avaNulis;
-        document.getElementById('img-raka').src="https://drive.google.com/thumbnail?id="+d.raka;
-        document.getElementById('img-caca').src="https://drive.google.com/thumbnail?id="+d.caca;
-        document.getElementById('hal-menu').style.display='none';
-        document.getElementById('hal-avatar').style.display='flex'; 
-    }
-
-    function setAvatar(c) {
-        const d = (targetL==1) ? avaMaca : avaNulis; 
-        document.getElementById('avatar-display').src = "https://drive.google.com/thumbnail?id=" + d[c];
-        document.getElementById('hal-avatar').style.display='none';
-        mulaiSesi(targetL);
-    }
-
-    function mulaiSesi(l) {
-        curL = l; sk = 0; benar = 0; nyawa = 5; 
-        list = (l === 1) ? [...dL1] : [...soalPre];
-        list.sort(() => Math.random() - 0.5); 
-        document.getElementById('hal-menu').style.display = 'none';
-        document.getElementById('game').style.display = 'flex'; 
-        muat();
-    }
-
-    function muat() {
-        if(sk >= list.length) { tampilkanReward(); return; } 
-        document.getElementById('jaw').value = "";
-        document.getElementById('fed').innerHTML = ""; 
-        let nDisp = document.getElementById('nyawa-disp');
-        nDisp.innerHTML = "❤".repeat(nyawa); 
-        nDisp.style.display = (curL == 3) ? "none" : "block"; 
-        
-        let tks = ["Tes awal: Napah nyamanah aksara carakan paneka?", "Toles nyama latennah aksara carakan paneka!", "Ajher noles: Patebbel aksara carakannah!", "Tes akhir: Patebbel aksara carakannah, pas jawab!!"];
-        document.getElementById('bubble').innerText = tks[curL]; 
-        document.getElementById('pic').src = "https://drive.google.com/thumbnail?id=" + list[sk].id;
-        document.getElementById('pic').style.opacity = (curL >= 2) ? "0.3" : "1"; 
-        document.getElementById('btn-hapus').style.display = (curL >= 2) ? "block" : "none"; 
-        
-        if(curL > 0) { setTimeout(initCanvas, 300); } 
-        else { document.getElementById('paintCanvas').style.display = "none"; } 
-        hapusGoresan();
-        sudahGores = false;
-    }
-
-    // --- LOGIKA GAME (CANVAS & CEK) ---
-    function initCanvas() {
-        let cv = document.getElementById('paintCanvas');
-        let ct = document.getElementById('canvas-container');
-        cv.style.display = "block"; 
-        cv.width = ct.offsetWidth; cv.height = ct.offsetHeight;
-        let cx = cv.getContext('2d');
-        let dr = false;
-        cx.lineWidth = 7; cx.lineCap = 'round'; cx.strokeStyle = '#4b0082'; 
-
-        const pos = (e) => {
-            let r = cv.getBoundingClientRect();
-            let t = e.touches ? e.touches[0] : e;
-            return { x: t.clientX - r.left, y: t.clientY - r.top };
-        };
-
-        cv.onmousedown = cv.ontouchstart = (e) => { 
-            dr = true; sudahGores = true; cx.beginPath(); 
-            let p = pos(e); cx.moveTo(p.x, p.y); 
-        };
-        cv.onmousemove = cv.ontouchmove = (e) => { 
-            if(dr){ let p = pos(e); cx.lineTo(p.x, p.y); cx.stroke(); } 
-        };
-        window.onmouseup = window.ontouchend = () => { dr = false; }; 
-    }
-
-    function hapusGoresan() {
-        let cv = document.getElementById('paintCanvas');
-        if(cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height); 
-        sudahGores = false;
-    }
-
-    function cek() {
-        if(sudahKlik) return;
-        sudahKlik = true; 
-
-        if((curL === 2 || curL === 3) && !sudahGores){
-            tampilInfo("⚠ Patebbel carakannah gellu!");
-            sudahKlik = false; return;
-        }
-
-        let input = document.getElementById('jaw');
-        let j = input.value ? input.value.toLowerCase().trim() : "";
-
-        if(j === list[sk].k){ 
-            benar++; bunyikan("audioBenar"); 
-            document.getElementById('fed').innerHTML = "<span style='color:green; font-size: 2rem;'>Teppa'!</span>"; 
-        } else { 
-            if(curL !== 3) nyawa--;
-            bunyikan("audioSalah");
-            document.getElementById('fed').innerHTML = "<span style='color:red; font-size: 2rem;'>Korang teppa'!</span>"; 
-        }
-
-        if(nyawa <= 0 && curL !== 3) {
-            tampilInfo("Nyabenah ampon sobung! Coba' pole ghi...");
-            setTimeout(() => { location.reload(); }, 1500); return;
-        }
-
-        setTimeout(() => { sk++; muat(); sudahKlik = false; }, 1200); 
-    }
-
-    // --- REWARD & SPREADSHEET ---
-    function tampilkanReward() {
-    let s = benar * 5;
-
-    document.getElementById('bintang-container').innerText =
-        (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-
-    document.getElementById('teks-skor').innerText = "Skor: " + s;
-    document.getElementById('modal-skor').style.display = 'flex';
-
-    let dataKirim = {
+    const data = {
         nama: nama,
-        kelas: kelas
+        kelas: kelas,
+        skor_pretes: nilaiPreTest,
+        tanggal_pretes: new Date().toLocaleString("id-ID"),
+        skor_post_test: nilaiPostTest,
+        tanggal_post_test: new Date().toLocaleString("id-ID"),
+        badge_capaian: badge
     };
-
-    if (curL === 0) {
-        dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
-        dataKirim.skor_pretes = s;
-    }
-
-    if (curL === 3) {
-        dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
-        dataKirim.skor_post_test = s;
-        dataKirim.badge_capaian =
-            (s >= 80) ? "HEBAT" :
-            (s >= 55 ? "BAGUS" : "TERUS BELAJAR");
-    }
 
     fetch(URL_SCRIPT, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dataKirim)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
     })
-    .then(res => res.text())
-    .then(res => console.log("Data terkirim:", res))
-    .catch(err => console.error(err));
+    .then(res => console.log("Data tersimpan:", res))
+    .catch(err => console.error("Error kirim data:", err));
 }
 
-    function tutupModalSkor() {
-        document.getElementById('modal-skor').style.display = 'none'; 
-        if (curL === 3) { 
-            document.getElementById('nama-selamat').innerText = nama;
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('hal-reward-1').style.display = 'flex'; 
-        } else { balikKeMenu(); }
-    }
+// --- Fungsi otomatis dipanggil setelah sesi selesai ---
+function tampilkanRewardFinal(benar, nama, kelas){
+    const nilai = benar * 5;
+    document.getElementById('bintang-container').innerText = (nilai >= 80) ? "⭐⭐⭐" : (nilai >= 60 ? "⭐⭐" : "⭐");
+    document.getElementById('teks-skor').innerText = "Skor: " + nilai;
+    document.getElementById('modal-skor').style.display = 'flex';
 
-    function keLayarBadge() {
-        let s = benar * 5;
-        let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
-        document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
-        document.getElementById('teks-badge').innerText = (s >= 80) ? "HEBAT!" : (s >= 55 ? "BAGUS!" : "TERUS BELAJAR!"); 
-        document.getElementById('hal-reward-1').style.display = 'none';
-        document.getElementById('hal-reward-2').style.display = 'flex';
-    }
+    // Kirim data otomatis
+    kirimData(nama, kelas, window.nilaiPreTest || 0, nilai);
 
-    function bukaLeaderboardOtomatis() {
-    document.getElementById('hal-leaderboard').style.display = 'flex';
-    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-        let html = `<table class='leaderboard-table'>
-            <tr>
-                <th>Nama</th>
-                <th>Tgl Pre</th>
-                <th>Skor Pre</th>
-                <th>Tgl Post</th>
-                <th>Skor Post</th>
-                <th>Badge</th>
-            </tr>`;
-        
-        data.forEach(p => { 
-            html += `<tr>
-                <td>${p.nama}</td>
-                <td>${p.tanggal_pretes || '-'}</td>
-                <td>${p.skor_pretes || '-'}</td>
-                <td>${p.tanggal_post_test || '-'}</td>
-                <td>${p.skor_post_test || '-'}</td>
-                <td>${p.badge_capaian || '-'}</td>
-            </tr>`; 
-        });
-        document.getElementById('leaderboard-content').innerHTML = html + "</table>";
-    });
+    // Tampilkan badge
+    let badgeId = (nilai >= 75) ? "ID_BADGE_UTAMA" : (nilai > 55 ? "ID_BADGE_MADYA" : "ID_BADGE_PEMULA");
+    document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + badgeId;
+    document.getElementById('teks-badge').innerText = hitungBadge(nilai);
 
-    setTimeout(() => {
-        document.getElementById('hal-leaderboard').style.display = 'none';
-        tampilkanLayarPenutup();
-    }, 15000);
+    document.getElementById('hal-reward-1').style.display = 'none';
+    document.getElementById('hal-reward-2').style.display = 'flex';
 }
 
-    function tampilkanLayarPenutup() {
-        document.getElementById('hal-penutup').style.display = 'flex';
-        setTimeout(() => { location.reload(); }, 3000);
-    }
+// --- Contoh panggilan otomatis (ganti sesuai variabel game) ---
+// Pastikan kamu simpan nilai pre-test sebelumnya di window.nilaiPreTest
+window.namaSiswa = "Siswa Contoh";
+window.kelasSiswa = "Kelas 1";
+window.nilaiPreTest = 80;  // Simpan skor pre-test sebelumnya
+let nilaiPostTest = 78;     // Nilai post-test dari game
 
-    function balikKeMenu() {
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('hal-menu').style.display = 'flex';
-        sk = 0; nyawa = 5; benar = 0; 
-    }
-
-    function bunyikan(id){
-        const a = document.getElementById(id);
-        if(a) { a.currentTime = 0; a.play().catch(()=>{}); }
-    }
-
-    function tampilInfo(pesan){
-        bunyikan("audioInfo");
-        document.getElementById('teks-info').innerText = pesan; 
-        document.getElementById('modal-info').style.display = 'flex';
-    }
-
-    function tutupInfo(){ document.getElementById('modal-info').style.display = 'none'; }
-    
-    function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
-    function tutupGameKeLeaderboard() {
-
-    let skorAkhir = benar * 5;
-
-    let form = document.createElement("form");
-    form.method = "POST";
-    form.action = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
-    form.target = "_blank"; // supaya tidak pindah halaman
-
-    let fields = {
-        nama: nama,
-        kelas: kelas,
-        skor_post_test: skorAkhir,
-        badge_capaian:
-            (skorAkhir >= 80) ? "HEBAT" :
-            (skorAkhir >= 55 ? "BAGUS" : "TERUS BELAJAR")
-    };
-
-    for (let key in fields) {
-        let input = document.createElement("input");
-        input.type = "hidden";
-        input.name = key;
-        input.value = fields[key];
-        form.appendChild(input);
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-
-    alert("Data berhasil dikirim!");
-}
-            <script>
-// Ganti SCRIPT_URL dengan endpoint Apps Script-mu
-const SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-
-// Fungsi otomatis simpan data
-function simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest) {
-  // Hitung badge
-  let badge = "";
-  if(nilaiPostTest >= 50 && nilaiPostTest <= 55) badge = "Pemula";
-  else if(nilaiPostTest > 55 && nilaiPostTest <= 75) badge = "Madya";
-  else if(nilaiPostTest > 75) badge = "Utama";
-  else badge = "Terus Belajar";
-
-  // Mainkan audio otomatis sesuai badge
-  if(badge === "Pemula" || badge === "Madya" || badge === "Utama") {
-    document.getElementById("audioBenar").play();
-  } else {
-    document.getElementById("audioInfo").play();
-  }
-
-  // Kirim ke Apps Script
-  fetch(SCRIPT_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      namaSiswa: namaSiswa,
-      kelasSiswa: kelasSiswa,
-      nilaiPreTest: nilaiPreTest,
-      nilaiPostTest: nilaiPostTest,
-      tanggalPreTest: new Date(),
-      tanggalPostTest: new Date(),
-      badge: badge
-    })
-  })
-  .then(res => console.log("Data tersimpan:", res))
-  .catch(err => console.error(err));
-}
-
-// Contoh panggilan otomatis (ganti sesuai variabel gamemu)
-let namaSiswa = "Siswa Contoh";
-let kelasSiswa = "Kelas 1";
-let nilaiPreTest = 80;  // skor pre-test dari game
-let nilaiPostTest = 78; // skor post-test dari game
-
-simpanHasilOtomatis(namaSiswa, kelasSiswa, nilaiPreTest, nilaiPostTest);
+// Langsung kirim saat post-test selesai
+kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTest);
+</script>
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
