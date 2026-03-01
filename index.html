@@ -183,98 +183,91 @@
 #leaderboard-content {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 15px;
-    width: 95%; /* Lebih lebar sedikit untuk HP */
-    max-width: 600px;
+    gap: 6px; /* Jarak antar baris diperkecil */
+    padding: 5px 10px;
+    width: 98%;
+    max-width: 550px;
     margin: auto;
 }
 
-/* Kartu Ungu Mewah */
+#leaderboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* Jarak antar baris diperkecil */
+    padding: 5px 10px;
+    width: 98%;
+    max-width: 550px;
+    margin: auto;
+}
+
 .rank-card {
     display: flex;
     align-items: center;
-    /* Gradasi 3 warna: Deep Purple -> Royal Purple -> Magenta */
-    background: linear-gradient(135deg, #2e1065 0%, #6d28d9 50%, #db2777 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50px;
-    padding: 12px 25px;
+    /* Gradasi Megah: Navy -> Deep Violet -> Fuchsia */
+    background: linear-gradient(135deg, #1e1b4b 0%, #581c87 45%, #c026d3 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 4px solid #fbbf24; /* Aksen emas di kiri */
+    border-radius: 30px; /* Lebih ramping */
+    padding: 6px 15px;
     color: white;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.4), inset 0 0 10px rgba(255,255,255,0.1);
-    animation: fadeInUp 0.5s ease forwards;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: fadeInUp 0.4s ease forwards;
     opacity: 0;
 }
 
-/* Tambahan: Efek Berkilau untuk Juara 1 */
-.rank-card:first-child {
-    background: linear-gradient(135deg, #4c1d95 0%, #9333ea 50%, #f472b6 100%);
-    border: 2px solid #fde047; /* Bingkai Emas */
-    box-shadow: 0 0 20px rgba(244, 114, 182, 0.6);
-}
-
 .rank-number {
-    background: #2e1065;
-    width: 38px;
-    height: 38px;
+    background: rgba(0,0,0,0.5);
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 800;
-    margin-right: 15px;
-    font-size: 16px;
-    border: 1px solid #a78bfa;
-}
-
-.user-info {
-    flex-grow: 1;
-    overflow: hidden;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 12px;
 }
 
 .user-name {
-    font-weight: bold;
-    font-size: 17px; /* Nama lebih besar */
-    display: block;
+    flex-grow: 1;
+    font-weight: 600;
+    font-size: 13px; /* Ukuran teks nama dikecilkan */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* Badge Box dengan Gambar */
+.score-pre {
+    font-size: 11px;
+    color: #cbd5e1; /* Abu-abu terang */
+    margin-right: 8px;
+    font-style: italic;
+}
+
 .badge-box {
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 11px;
-    margin: 0 10px;
-    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2px 8px;
+    font-size: 9px;
+    margin-right: 10px;
 }
 
 .badge-icon {
-    width: 22px; /* Ukuran icon kecil tapi jelas */
-    height: 22px;
-    margin-right: 6px;
-    object-fit: contain;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
 }
 
-.score-box {
-    color: #fde047; /* Kuning cerah */
-    font-weight: 900;
-    font-size: 20px;
-    min-width: 40px;
-    text-align: right;
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+.score-post {
+    color: #fde047; /* Kuning Emas */
+    font-weight: 800;
+    font-size: 15px;
 }
     </style>
 </head>
 <body>
-
     <audio id="audioBenar" preload="auto">
   <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_73147a469a.mp3" type="audio/mpeg">
 </audio>
@@ -391,7 +384,6 @@
         <button class="btn-3d" onclick="tutupInfo()">OK</button>
     </div>
 </div>
-    
         <script>
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
     
@@ -405,15 +397,7 @@
     const audioS = document.getElementById('audioSalah');
     const audioI = document.getElementById('audioInfo');
 
-    // Aktifkan audio saat pertama klik (Browser Policy)
-    document.addEventListener("click", function() {
-        [audioB, audioS, audioI].forEach(a => {
-            if(a) {
-                a.play().then(() => a.pause()).catch(() => {});
-            }
-        });
-    }, { once: true });
-
+    
     // Fungsi masukMenu yang sebelumnya 'not defined'
     function masukMenu() {
         nama = document.getElementById('namaSiswa').value;
@@ -564,7 +548,19 @@ function tampilkanInfoTebalkan() {
     document.getElementById("audioInfo").play();
     alert("Enga'! Patebbhel gellu Carakannah ghi...");
 }
+function mainkanSuara(jenis) {
+    let audio;
+    if (jenis === 'benar') audio = document.getElementById("audioBenar");
+    else if (jenis === 'salah') audio = document.getElementById("audioSalah");
+    else audio = document.getElementById("audioInfo");
 
+    if (audio) {
+        audio.currentTime = 0; // Agar bisa diputar berkali-kali tanpa tunggu habis
+        audio.play().catch(error => {
+            console.log("Audio gagal putar karena kebijakan browser. User harus klik tombol dulu.");
+        });
+    }
+}
     // --- REWARD & SPREADSHEET ---
     function tampilkanReward() {
     let s = benar * 5;
@@ -618,46 +614,41 @@ function tampilkanInfoTebalkan() {
     }
 
     function bukaLeaderboardOtomatis() {
+    // Panggil Audio Tepuk Tangan saat leaderboard buka
+    document.getElementById("audioBenar").play().catch(e => console.log("Menunggu interaksi user"));
+
     document.getElementById('hal-leaderboard').style.display = 'flex';
     
     fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-        // Urutkan 10 teratas
         data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
         let top10 = data.slice(0, 10);
 
         let html = ""; 
-        
         top10.forEach((p, index) => {
-            // Logika Link Gambar Badge berdasarkan ID yang kamu berikan
             let badgeID = "";
             let badgeNama = (p.badge_capaian || "PEMULA").toUpperCase();
 
-            if (badgeNama.includes("UTAMA")) {
-                badgeID = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
-            } else if (badgeNama.includes("MADYA")) {
-                badgeID = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
-            } else {
-                badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
-            }
+            if (badgeNama.includes("UTAMA")) badgeID = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
+            else if (badgeNama.includes("MADYA")) badgeID = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
+            else badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
 
-            let badgeURL = `https://lh3.googleusercontent.com/u/0/d/${badgeID}`;
+            let badgeURL = `https://drive.google.com/uc?export=view&id=${badgeID}`;
 
             html += `
-            <div class="rank-card" style="animation-delay: ${index * 0.1}s">
+            <div class="rank-card" style="animation-delay: ${index * 0.05}s">
                 <div class="rank-number">${index + 1}</div>
-                <div class="user-info">
-                    <span class="user-name">${p.nama}</span>
-                </div>
+                <div class="user-name">${p.nama}</div>
+                <div class="score-pre">Pre: ${p.skor_pretes || 0}</div>
                 <div class="badge-box">
-                    <img src="${badgeURL}" class="badge-icon" alt="badge">
+                    <img src="${badgeURL}" class="badge-icon">
                     <span>${badgeNama}</span>
                 </div>
-                <div class="score-box">${p.skor_post_test || 0}</div>
+                <div class="score-post">${p.skor_post_test || 0}</div>
             </div>`; 
         });
-
         document.getElementById('leaderboard-content').innerHTML = html;
     });
+}
 
     setTimeout(() => {
         document.getElementById('hal-leaderboard').style.display = 'none';
@@ -755,6 +746,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
