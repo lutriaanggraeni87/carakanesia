@@ -179,6 +179,76 @@
             background-color: var(--ungu);
             color: white;
         }
+        /* Container Utama Leaderboard */
+#leaderboard-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+/* Kartu Per Baris */
+.rank-card {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    padding: 8px 20px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.rank-number {
+    background: #001f3f;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 15px;
+    font-size: 14px;
+}
+
+.user-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.badge-box {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid white;
+    border-radius: 15px;
+    padding: 2px 12px;
+    font-size: 11px;
+    margin: 0 10px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.score-box {
+    color: #fbbf24;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
     </style>
 </head>
 <body>
@@ -507,30 +577,40 @@
 
     function bukaLeaderboardOtomatis() {
     document.getElementById('hal-leaderboard').style.display = 'flex';
-    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-        let html = `<table class='leaderboard-table'>
-            <tr>
-                <th>Nama</th>
-                <th>Tgl Pre</th>
-                <th>Skor Pre</th>
-                <th>Tgl Post</th>
-                <th>Skor Post</th>
-                <th>Badge</th>
-            </tr>`;
+    
+    fetch(URL_SCRIPT)
+    .then(r => r.json())
+    .then(data => {
+        // 1. Urutkan berdasarkan Skor Post Test (Terbesar ke Terkecil)
+        data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
+
+        // 2. Ambil 5 teratas
+        let top5 = data.slice(0, 5);
+
+        let html = ""; 
         
-        data.forEach(p => { 
-            html += `<tr>
-                <td>${p.nama}</td>
-                <td>${p.tanggal_pretes || '-'}</td>
-                <td>${p.skor_pretes || '-'}</td>
-                <td>${p.tanggal_post_test || '-'}</td>
-                <td>${p.skor_post_test || '-'}</td>
-                <td>${p.badge_capaian || '-'}</td>
-            </tr>`; 
+        top5.forEach((p, index) => { 
+            // Delay animasi supaya muncul satu per satu
+            let delay = index * 0.1;
+
+            html += `
+            <div class="rank-card" style="animation-delay: ${delay}s">
+                <div class="rank-number">${index + 1}</div>
+                <div class="user-info">
+                    <span class="user-name">${p.nama}</span>
+                </div>
+                <div class="badge-box">${p.badge_capaian || 'Peserta'}</div>
+                <div class="score-box">${p.skor_post_test || 0}</div>
+            </div>`; 
         });
-        document.getElementById('leaderboard-content').innerHTML = html + "</table>";
+
+        document.getElementById('leaderboard-content').innerHTML = html;
+    })
+    .catch(err => {
+        document.getElementById('leaderboard-content').innerHTML = "<p style='color:white'>Gagal memuat peringkat.</p>";
     });
 
+    // Waktu tampil leaderboard (15 detik)
     setTimeout(() => {
         document.getElementById('hal-leaderboard').style.display = 'none';
         tampilkanLayarPenutup();
@@ -628,6 +708,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
