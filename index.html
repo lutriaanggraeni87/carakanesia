@@ -456,10 +456,7 @@
     // --- REWARD & SPREADSHEET ---
     function tampilkanReward() {
     let s = benar * 5;
-
-    document.getElementById('bintang-container').innerText =
-        (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-
+    document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
     document.getElementById('teks-skor').innerText = "Skor: " + s;
     document.getElementById('modal-skor').style.display = 'flex';
 
@@ -476,21 +473,18 @@
     if (curL === 3) {
         dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
         dataKirim.skor_post_test = s;
-        dataKirim.badge_capaian =
-            (s >= 80) ? "Badge Utama" :
-            (s >= 55 ? "Badge Madya" : "Badge Pemula");
+        // PENGATURAN BADGE UNTUK SPREADSHEET
+        dataKirim.badge_capaian = (s > 75) ? "UTAMA" : (s > 55 ? "MADYA" : "PEMULA");
     }
 
     fetch(URL_SCRIPT, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        mode: "no-cors", // Tambahkan ini untuk mengurangi error CORS saat tes
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataKirim)
     })
-    .then(res => res.text())
-    .then(res => console.log("Data terkirim:", res))
-    .catch(err => console.error(err));
+    .then(res => console.log("Data terkirim"))
+    .catch(err => console.error("Error kirim:", err));
 }
 
     function tutupModalSkor() {
@@ -573,20 +567,15 @@
         bukaLeaderboardOtomatis(); 
     }
             // Fungsi hitung badge otomatis
-    function hitungBadge(nilai){
-    if(nilai > 55 && nilai <= 75) return "Madya";
-    if(nilai > 75) return "Utama";
-    return "Pemula";
+    function hitungBadge(nilai) {
+    if (nilai > 75) return "UTAMA";
+    if (nilai > 55) return "MADYA";
+    return "PEMULA";
 }
 
 // Fungsi kirim data pre-test / post-test
 function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
     const badge = hitungBadge(nilaiPostTest);
-
-    // Mainkan audio sesuai badge
-    if(badge === "Pemula" || badge === "Madya" || badge === "Utama") document.getElementById("audioBenar").play();
-    else document.getElementById("audioInfo").play();
-
     const data = {
         nama: nama,
         kelas: kelas,
@@ -639,6 +628,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
