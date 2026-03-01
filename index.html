@@ -179,74 +179,88 @@
             background-color: var(--ungu);
             color: white;
         }
-        /* Container Utama Leaderboard */
+       /* Container Utama */
 #leaderboard-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    width: 100%;
-    max-width: 500px;
+    gap: 12px;
+    padding: 15px;
+    width: 95%; /* Lebih lebar sedikit untuk HP */
+    max-width: 600px;
     margin: auto;
 }
 
-/* Kartu Per Baris */
+/* Kartu Ungu Mewah */
 .rank-card {
     display: flex;
     align-items: center;
-    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%); /* Ungu Gradasi */
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
     border-radius: 50px;
-    padding: 8px 20px;
+    padding: 12px 25px; /* Lebih besar & lega */
     color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
     animation: fadeInUp 0.5s ease forwards;
     opacity: 0;
 }
 
 .rank-number {
-    background: #001f3f;
-    width: 30px;
-    height: 30px;
+    background: #2e1065;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: bold;
+    font-weight: 800;
     margin-right: 15px;
-    font-size: 14px;
+    font-size: 16px;
+    border: 1px solid #a78bfa;
 }
 
 .user-info {
     flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
 }
 
 .user-name {
     font-weight: bold;
-    font-size: 15px;
+    font-size: 17px; /* Nama lebih besar */
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+/* Badge Box dengan Gambar */
 .badge-box {
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid white;
-    border-radius: 15px;
-    padding: 2px 12px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
     font-size: 11px;
     margin: 0 10px;
-    text-align: center;
-    min-width: 80px;
+    font-weight: 600;
+}
+
+.badge-icon {
+    width: 22px; /* Ukuran icon kecil tapi jelas */
+    height: 22px;
+    margin-right: 6px;
+    object-fit: contain;
 }
 
 .score-box {
-    color: #fbbf24;
-    font-weight: bold;
-    font-size: 18px;
+    color: #fde047; /* Kuning cerah */
+    font-weight: 900;
+    font-size: 20px;
+    min-width: 40px;
+    text-align: right;
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
     </style>
@@ -578,45 +592,50 @@
     function bukaLeaderboardOtomatis() {
     document.getElementById('hal-leaderboard').style.display = 'flex';
     
-    fetch(URL_SCRIPT)
-    .then(r => r.json())
-    .then(data => {
-        // 1. Urutkan berdasarkan Skor Post Test (Terbesar ke Terkecil)
+    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
+        // Urutkan 10 teratas
         data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
-
-        // 2. Ambil 5 teratas
-        let top5 = data.slice(0, 5);
+        let top10 = data.slice(0, 10);
 
         let html = ""; 
         
-        top5.forEach((p, index) => { 
-            // Delay animasi supaya muncul satu per satu
-            let delay = index * 0.1;
+        top10.forEach((p, index) => {
+            // Logika Link Gambar Badge berdasarkan ID yang kamu berikan
+            let badgeID = "";
+            let badgeNama = (p.badge_capaian || "PEMULA").toUpperCase();
+
+            if (badgeNama.includes("UTAMA")) {
+                badgeID = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
+            } else if (badgeNama.includes("MADYA")) {
+                badgeID = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
+            } else {
+                badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
+            }
+
+            let badgeURL = `https://lh3.googleusercontent.com/u/0/d/${badgeID}`;
 
             html += `
-            <div class="rank-card" style="animation-delay: ${delay}s">
+            <div class="rank-card" style="animation-delay: ${index * 0.1}s">
                 <div class="rank-number">${index + 1}</div>
                 <div class="user-info">
                     <span class="user-name">${p.nama}</span>
                 </div>
-                <div class="badge-box">${p.badge_capaian || 'Peserta'}</div>
+                <div class="badge-box">
+                    <img src="${badgeURL}" class="badge-icon" alt="badge">
+                    <span>${badgeNama}</span>
+                </div>
                 <div class="score-box">${p.skor_post_test || 0}</div>
             </div>`; 
         });
 
         document.getElementById('leaderboard-content').innerHTML = html;
-    })
-    .catch(err => {
-        document.getElementById('leaderboard-content').innerHTML = "<p style='color:white'>Gagal memuat peringkat.</p>";
     });
 
-    // Waktu tampil leaderboard (15 detik)
     setTimeout(() => {
         document.getElementById('hal-leaderboard').style.display = 'none';
         tampilkanLayarPenutup();
     }, 15000);
 }
-
     function tampilkanLayarPenutup() {
         document.getElementById('hal-penutup').style.display = 'flex';
         setTimeout(() => { location.reload(); }, 5000);
@@ -708,6 +727,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
