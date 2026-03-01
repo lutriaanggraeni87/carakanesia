@@ -477,8 +477,8 @@
         dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
         dataKirim.skor_post_test = s;
         dataKirim.badge_capaian =
-            (s >= 80) ? "HEBAT" :
-            (s >= 55 ? "BAGUS" : "TERUS BELAJAR");
+            (s >= 80) ? "Badge Utama" :
+            (s >= 55 ? "Badge Madya" : "Badge Pemula");
     }
 
     fetch(URL_SCRIPT, {
@@ -574,10 +574,9 @@
     }
             // Fungsi hitung badge otomatis
 function hitungBadge(nilai){
-    if(nilai >= 50 && nilai <= 55) return "Pemula";
-    if(nilai > 55 && nilai <= 75) return "Madya";
     if(nilai > 75) return "Utama";
-    return "Terus Belajar";
+    if(nilai > 55) return "Madya";
+    return "Pemula";
 }
 
 // Fungsi kirim data pre-test / post-test
@@ -640,4 +639,5 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
