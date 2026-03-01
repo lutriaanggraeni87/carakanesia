@@ -543,40 +543,37 @@ function masukMenu() {
 
     // 5. REWARD, BADGE & SPREADSHEET
     function tampilkanReward() {
-        let s = benar * 5;
-        document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-        document.getElementById('teks-skor').innerText = "Skor: " + s;
-        document.getElementById('modal-skor').style.display = 'flex';
+    let s = benar * 5;
+    document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
+    document.getElementById('teks-skor').innerText = "Skor: " + s;
+    document.getElementById('modal-skor').style.display = 'flex';
 
-        // Persiapan data dasar
-        let dataKirim = { 
-            nama: nama, 
-            kelas: kelas 
-        };
+    let dataKirim = { 
+        nama: nama, 
+        kelas: kelas 
+    };
 
-        if (curL === 0) {
-            // LOGIKA PRE-TEST: Kirim tanggal & skor ke sheet progres_user
-            dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
-            dataKirim.skor_pretes = s;
-            skorPreGlobal = s; // Simpan untuk cadangan post-test nanti
-        } else if (curL === 3) {
-            // LOGIKA POST-TEST
-            dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
-            dataKirim.skor_post_test = s;
-            dataKirim.skor_pretes = skorPreGlobal; // Sertakan skor pre-test sebelumnya
-            dataKirim.badge_capaian = (s >= 75) ? "UTAMA" : (s >= 55 ? "MADYA" : "PEMULA");
-        }
-
-        // PROSES KIRIM KE GOOGLE SHEETS
-        fetch(URL_SCRIPT, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dataKirim)
-        }).then(() => {
-            console.log("Data berhasil dikirim ke Sheet:", dataKirim);
-        }).catch(err => console.error("Gagal kirim ke Sheet:", err));
+    // PENTING: Cek Level
+    if (curL === 0) {
+        // Ini bagian yang menjamin tanggal pretes masuk
+        dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
+        dataKirim.skor_pretes = s;
+        skorPreGlobal = s; // Simpan untuk post-test nanti
+    } else if (curL === 3) {
+        dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
+        dataKirim.skor_post_test = s;
+        dataKirim.skor_pretes = skorPreGlobal; // Mengirim ulang skor pretes agar satu baris
+        dataKirim.badge_capaian = (s >= 75) ? "UTAMA" : (s >= 55 ? "MADYA" : "PEMULA");
     }
+
+    // Kirim ke Google Sheets
+    fetch(URL_SCRIPT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dataKirim)
+    }).catch(err => console.log("Gagal kirim data"));
+}
 
     function tutupModalSkor() {
         document.getElementById('modal-skor').style.display = 'none'; 
@@ -598,68 +595,49 @@ function masukMenu() {
 
     // 6. LEADERBOARD & PENUTUP
    function bukaLeaderboardOtomatis() {
-        bunyikan("audioInfo"); 
-        
-        const lbContainer = document.getElementById('hal-leaderboard');
-        const lbContent = document.getElementById('leaderboard-content');
-        
-        lbContainer.style.display = 'flex';
-        lbContent.innerHTML = "<div style='color:white; text-align:center; margin-top:20px;'>Sedang memuat peringkat...</div>";
-        
-        // 1. KOD UNTUK MENGAMBIL DATA
-        fetch(URL_SCRIPT)
-            .then(response => response.json())
-            .then(data => {
-                if (!Array.isArray(data)) {
-                    lbContent.innerHTML = "<div style='color:yellow;'>Data tidak ditemui.</div>";
-                    return;
-                }
-
-                // Susun skor tertinggi
-                data.sort((a, b) => Number(b.skor_post_test || 0) - Number(a.skor_post_test || 0));
-                
-                let html = ""; 
-                let topTen = data.slice(0, 10);
-
-                if (topTen.length === 0) {
-                    html = "<div style='color:white;'>Belum ada rekod.</div>";
-                } else {
-                    topTen.forEach((p, index) => {
-                        let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
-                        let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : 
-                                  (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
-                        
-                        html += `
-                        <div class="rank-card" style="display: flex; align-items: center; background: rgba(255,255,255,0.1); margin: 5px; padding: 8px; border-radius: 8px;">
-                            <div style="width: 25px;">${index + 1}</div>
-                            <div style="flex-grow: 1;">${p.nama || 'Siswa'}</div>
-                            <div style="margin-right: 10px; font-size: 0.7rem;">Pre: ${p.skor_pretes || 0}</div>
-                            <div style="text-align: center; margin-right: 10px;">
-                                <img src="https://drive.google.com/uc?export=view&id=${bID}" style="width: 25px;">
-                            </div>
-                            <div style="font-weight: bold; color: #ffd700;">${p.score_post || p.skor_post_test || 0}</div>
-                        </div>`; 
-                    });
-                }
-                lbContent.innerHTML = html;
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                lbContent.innerHTML = "<div style='color:white;'>Gagal memuat data. Sila periksa sambungan internet.</div>";
-            });
-
-        // 2. KOD UNTUK MENUTUP SKRIN (Diletakkan di luar fetch supaya pasti berjalan)
-        setTimeout(() => {
-            lbContainer.style.display = 'none';
-            // Pastikan fungsi tampilkanLayarPenutup wujud
-            if (typeof tampilkanLayarPenutup === "function") {
-                tampilkanLayarPenutup();
-            } else {
-                location.reload(); // Jika fungsi tak ada, terus reload
-            }
-        }, 15000); // 15 saat
-    }
+    bunyikan("audioInfo"); 
+    const lbContainer = document.getElementById('hal-leaderboard');
+    const lbContent = document.getElementById('leaderboard-content');
     
+    lbContainer.style.display = 'flex';
+    lbContent.innerHTML = "<div style='color:white; text-align:center;'>Memuat Peringkat...</div>";
+    
+    fetch(URL_SCRIPT)
+        .then(r => r.json())
+        .then(data => {
+            // Urutkan skor dari yang paling tinggi
+            data.sort((a, b) => Number(b.skor_post_test || 0) - Number(a.skor_post_test || 0));
+            
+            let html = ""; 
+            // Ambil hanya 10 orang terbaik
+            data.slice(0, 10).forEach((p, index) => {
+                let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
+                let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : 
+                          (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
+                
+                html += `
+                <div class="rank-card" style="display:flex; align-items:center; background:rgba(0,0,0,0.3); margin:5px; padding:10px; border-radius:10px;">
+                    <div style="width:30px; font-weight:bold;">${index + 1}</div>
+                    <div style="flex-grow:1;">${p.nama}</div>
+                    <div style="margin-right:15px; font-size:0.8rem;">Pre: ${p.skor_pretes || 0}</div>
+                    <div style="text-align:center; margin-right:10px;">
+                        <img src="https://drive.google.com/uc?export=view&id=${bID}" style="width:25px;">
+                    </div>
+                    <div style="font-weight:bold; color:yellow;">${p.skor_post_test || 0}</div>
+                </div>`; 
+            });
+            lbContent.innerHTML = html;
+        })
+        .catch(() => {
+            lbContent.innerHTML = "<div style='color:white;'>Gagal memuat peringkat.</div>";
+        });
+
+    // PASTI MENUTUP setelah 15 detik
+    setTimeout(() => {
+        lbContainer.style.display = 'none';
+        tampilkanLayarPenutup();
+    }, 15000);
+}
     function tutupGameKeLeaderboard() { 
         document.getElementById('hal-reward-2').style.display = 'none';
         bukaLeaderboardOtomatis(); 
@@ -679,6 +657,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
