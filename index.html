@@ -571,39 +571,50 @@
     }
 
     // 6. LEADERBOARD & PENUTUP
+   // --- POTONGAN KHUSUS LEADERBOARD ---
     function bukaLeaderboardOtomatis() {
-        bunyikan("audioBenar"); 
+        bunyikan("audioInfo"); 
         document.getElementById('hal-leaderboard').style.display = 'flex';
+        document.getElementById('leaderboard-content').innerHTML = "Sedang memuat peringkat...";
         
         fetch(URL_SCRIPT).then(r => r.json()).then(data => {
+            // Urutkan berdasarkan skor post test tertinggi (Descending)
             data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
+            
             let html = ""; 
-            data.slice(0, 10).forEach((p, index) => {
+            // Ambil 10 peringkat teratas saja
+            let topTen = data.slice(0, 10);
+
+            topTen.forEach((p, index) => {
                 let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
-                let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
+                // Tentukan icon badge berdasarkan kategori
+                let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : 
+                          (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
                 
                 html += `
-                <div class="rank-card" style="animation-delay: ${index * 0.05}s">
+                <div class="rank-card">
                     <div class="rank-number">${index + 1}</div>
                     <div class="user-name">${p.nama}</div>
-                    <div class="score-pre">Pre: ${p.skor_pretes || 0}</div>
                     <div class="badge-box">
                         <img src="https://drive.google.com/uc?export=view&id=${bID}" class="badge-icon">
-                        <span>${bNama}</span>
+                        <span style="font-size: 0.7rem; display: block;">${bNama}</span>
                     </div>
                     <div class="score-post">${p.skor_post_test || 0}</div>
                 </div>`; 
             });
             document.getElementById('leaderboard-content').innerHTML = html;
-        }).catch(() => {
-            document.getElementById('leaderboard-content').innerHTML = "Gagal memuat data.";
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('leaderboard-content').innerHTML = "Gagal memuat data peringkat.";
         });
 
+        // Tampilkan selama 15 detik sebelum ke layar penutup
         setTimeout(() => {
             document.getElementById('hal-leaderboard').style.display = 'none';
             tampilkanLayarPenutup();
         }, 15000);
     }
+    // --- AKHIR POTONGAN LEADERBOARD ---
 
     function tutupGameKeLeaderboard() { 
         document.getElementById('hal-reward-2').style.display = 'none';
@@ -637,6 +648,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
