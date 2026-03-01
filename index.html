@@ -573,9 +573,9 @@
         bukaLeaderboardOtomatis(); 
     }
             // Fungsi hitung badge otomatis
-function hitungBadge(nilai){
+    function hitungBadge(nilai){
+    if(nilai > 55 && nilai <= 75) return "Madya";
     if(nilai > 75) return "Utama";
-    if(nilai > 55) return "Madya";
     return "Pemula";
 }
 
@@ -639,5 +639,6 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
