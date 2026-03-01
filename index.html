@@ -391,20 +391,45 @@
     const avaNulis = { raka: "1JPDbyrKl2GCD-_yCKrFMusHlhgFt99g5", caca: "16jaaIO1-Bk91tDbFV-xOz4gJWsCl0BK_" };
 
     // 2. FUNGSI NAVIGASI & MENU
-    function masukMenu() {
-        nama = document.getElementById('namaSiswa').value;
-        kelas = document.getElementById('kelasSiswa').value;
-        if(!nama || !kelas) { alert("Isi Nama & Kelas!"); return; }
-        
-        // Unlock audio untuk browser
-        [document.getElementById('audioBenar'), document.getElementById('audioSalah'), document.getElementById('audioInfo')].forEach(a => {
-            a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
-        });
-
-        document.getElementById('sapaan').innerText = "Hai, " + nama; 
-        document.getElementById('hal-id').style.display = 'none';
-        document.getElementById('hal-panduan').style.display = 'flex'; 
+    // Fungsi untuk memutar suara (Pastikan ini satu-satunya fungsi bunyikan di script)
+function bunyikan(id) {
+    const a = document.getElementById(id);
+    if (a) {
+        a.pause();
+        a.currentTime = 0; // Reset ke awal
+        // Gunakan timeout sedikit agar browser tidak kaget
+        setTimeout(() => {
+            a.play().catch(e => console.log("Gagal putar: " + id, e));
+        }, 50);
     }
+}
+
+// Fungsi saat klik tombol MASUK (Ini pemicu agar browser mengizinkan suara)
+function masukMenu() {
+    nama = document.getElementById('namaSiswa').value;
+    kelas = document.getElementById('kelasSiswa').value;
+    
+    if(!nama || !kelas) { 
+        alert("Isi Nama & Kelas!"); 
+        return; 
+    }
+    
+    // TRICK: Putar semua suara sebentar lalu matikan (Unmute untuk browser)
+    const daftarAudio = ['audioBenar', 'audioSalah', 'audioInfo'];
+    daftarAudio.forEach(id => {
+        const audio = document.getElementById(id);
+        if(audio) {
+            audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+            }).catch(e => console.log("Izin suara belum dibuka browser"));
+        }
+    });
+
+    document.getElementById('sapaan').innerText = "Hai, " + nama; 
+    document.getElementById('hal-id').style.display = 'none';
+    document.getElementById('hal-panduan').style.display = 'flex'; 
+}
 
     function lanjutKeMenu() {
         document.getElementById('hal-panduan').style.display = 'none';
@@ -572,68 +597,69 @@
     }
 
     // 6. LEADERBOARD & PENUTUP
-   // --- POTONGAN KHUSUS LEADERBOARD ---
    function bukaLeaderboardOtomatis() {
         bunyikan("audioInfo"); 
-        document.getElementById('hal-leaderboard').style.display = 'flex';
-        document.getElementById('leaderboard-content').innerHTML = "Sedang memuat peringkat...";
         
+        const lbContainer = document.getElementById('hal-leaderboard');
+        const lbContent = document.getElementById('leaderboard-content');
+        
+        lbContainer.style.display = 'flex';
+        lbContent.innerHTML = "<div style='color:white; text-align:center; margin-top:20px;'>Sedang memuat peringkat...</div>";
+        
+        // 1. KOD UNTUK MENGAMBIL DATA
         fetch(URL_SCRIPT)
-            .then(response => {
-                if (!response.ok) throw new Error('Jaringan bermasalah');
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // 1. Pastikan data adalah Array
                 if (!Array.isArray(data)) {
-                    lbContent.innerHTML = "<div style='color:red;'>Format data salah.</div>";
+                    lbContent.innerHTML = "<div style='color:yellow;'>Data tidak ditemui.</div>";
                     return;
                 }
 
-                // 2. Urutkan berdasarkan skor_post_test tertinggi (descending)
-                // Kita gunakan Number() untuk jaga-jaga jika data dari Sheet berupa string
+                // Susun skor tertinggi
                 data.sort((a, b) => Number(b.skor_post_test || 0) - Number(a.skor_post_test || 0));
                 
                 let html = ""; 
-                // 3. Ambil 10 peringkat teratas
                 let topTen = data.slice(0, 10);
 
                 if (topTen.length === 0) {
-                    html = "<div style='color:white; text-align:center;'>Belum ada data peringkat.</div>";
+                    html = "<div style='color:white;'>Belum ada rekod.</div>";
                 } else {
                     topTen.forEach((p, index) => {
-                        // Logika Badge
                         let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
                         let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : 
                                   (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
                         
                         html += `
-                        <div class="rank-card" style="display: flex; align-items: center; background: rgba(255,255,255,0.2); margin: 5px; padding: 10px; border-radius: 10px; color: white;">
-                            <div class="rank-number" style="font-weight: bold; width: 30px;">${index + 1}</div>
-                            <div class="user-name" style="flex-grow: 1; margin-left: 10px;">${p.nama || 'Anonim'}</div>
-                            <div class="score-pre" style="font-size: 0.8rem; margin-right: 15px; opacity: 0.8;">Pre: ${p.skor_pretes || 0}</div>
-                            <div class="badge-box" style="text-align: center; margin-right: 15px;">
-                                <img src="https://drive.google.com/uc?export=view&id=${bID}" class="badge-icon" style="width: 30px; height: 30px; display: block; margin: 0 auto;">
-                                <span style="font-size: 0.6rem;">${bNama}</span>
+                        <div class="rank-card" style="display: flex; align-items: center; background: rgba(255,255,255,0.1); margin: 5px; padding: 8px; border-radius: 8px;">
+                            <div style="width: 25px;">${index + 1}</div>
+                            <div style="flex-grow: 1;">${p.nama || 'Siswa'}</div>
+                            <div style="margin-right: 10px; font-size: 0.7rem;">Pre: ${p.skor_pretes || 0}</div>
+                            <div style="text-align: center; margin-right: 10px;">
+                                <img src="https://drive.google.com/uc?export=view&id=${bID}" style="width: 25px;">
                             </div>
-                            <div class="score-post" style="font-weight: bold; font-size: 1.2rem; color: #ffd700;">${p.skor_post_test || 0}</div>
+                            <div style="font-weight: bold; color: #ffd700;">${p.score_post || p.skor_post_test || 0}</div>
                         </div>`; 
                     });
                 }
                 lbContent.innerHTML = html;
             })
             .catch(err => {
-                console.error("Error Leaderboard:", err);
-                lbContent.innerHTML = "<div style='color:yellow; text-align:center;'>Gagal mengambil data.<br>Pastikan Apps Script sudah di-Deploy sebagai 'Anyone'.</div>";
+                console.error("Error:", err);
+                lbContent.innerHTML = "<div style='color:white;'>Gagal memuat data. Sila periksa sambungan internet.</div>";
             });
 
-        // Tampilkan selama 15 detik lalu otomatis ke layar penutup
+        // 2. KOD UNTUK MENUTUP SKRIN (Diletakkan di luar fetch supaya pasti berjalan)
         setTimeout(() => {
             lbContainer.style.display = 'none';
-            tampilkanLayarPenutup();
-        }, 15000);
+            // Pastikan fungsi tampilkanLayarPenutup wujud
+            if (typeof tampilkanLayarPenutup === "function") {
+                tampilkanLayarPenutup();
+            } else {
+                location.reload(); // Jika fungsi tak ada, terus reload
+            }
+        }, 15000); // 15 saat
     }
-        
+    
     function tutupGameKeLeaderboard() { 
         document.getElementById('hal-reward-2').style.display = 'none';
         bukaLeaderboardOtomatis(); 
@@ -643,20 +669,7 @@
         document.getElementById('hal-penutup').style.display = 'flex';
         setTimeout(() => { location.reload(); }, 5000);
     }
-
-    // 7. FUNGSI UTILITY (AUDIO & INFO)
-    function bunyikan(id) {
-        const a = document.getElementById(id);
-        if(a) { a.currentTime = 0; a.play().catch(()=>{}); }
-    }
-
-    function tampilInfo(pesan) {
-        bunyikan("audioInfo");
-        document.getElementById('teks-info').innerText = pesan; 
-        document.getElementById('modal-info').style.display = 'flex';
-    }
-
-    function tutupInfo() { document.getElementById('modal-info').style.display = 'none'; }
+       function tutupInfo() { document.getElementById('modal-info').style.display = 'none'; }
     
     function nav(d) { if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
 // Langsung kirim saat post-test selesai
@@ -666,6 +679,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
