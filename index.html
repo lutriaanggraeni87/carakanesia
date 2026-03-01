@@ -309,6 +309,7 @@
     let sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
     let sudahGores = false, sudahKlik = false;
 
+    // Perbaikan Deklarasi Audio
     const audioB = document.getElementById('audioBenar');
     const audioS = document.getElementById('audioSalah');
     const audioI = document.getElementById('audioInfo');
@@ -316,27 +317,31 @@
     // Aktifkan audio saat pertama klik (Browser Policy)
     document.addEventListener("click", function() {
         [audioB, audioS, audioI].forEach(a => {
-            a.play().then(() => a.pause()).catch(() => {});
+            if(a) {
+                a.play().then(() => a.pause()).catch(() => {});
+            }
         });
     }, { once: true });
 
-    // Data Soal (Aksara)
+    // Fungsi masukMenu yang sebelumnya 'not defined'
+    function masukMenu() {
+        nama = document.getElementById('namaSiswa').value;
+        kelas = document.getElementById('kelasSiswa').value;
+        if(!nama || !kelas) {
+            alert("Isi Nama & Kelas!"); 
+            return;
+        }
+        document.getElementById('sapaan').innerText = "Hai, " + nama; 
+        document.getElementById('hal-id').style.display = 'none';
+        document.getElementById('hal-panduan').style.display = 'flex'; 
+    }
+// Data Soal (Aksara)
     const soalPre = [{id:"1AML1RqIIY8ZQfPDLZJPkKgLdGs7QdAYL",k:"a"},{id:"1nFZr-1q8LMr9Y9tixrKteUDWAY6TFY4w",k:"na"},{id:"15P_rL_bybu657a22Qe25E3wtgurrEYKy",k:"ca"},{id:"1ZKRGsSs3JCRIztTxnrws-9-icajznpJU",k:"ra"},{id:"121vpw8-avRmbIs8ozsG1LDtB0wtGlSgz",k:"ka"},{id:"1bcn1TAQReGdy_LIDBmty5vejiohoQok0",k:"da"},{id:"14ERILBMIXqePNANgbylVype2vwBCeO3Y",k:"ta"},{id:"14RIN28PJy8tw9nOIzgQYs0hafeSxihde",k:"sa"},{id:"1jUZOOjDc15IxSNPNNpahrPvi2K3Cx-_S",k:"wa"},{id:"1-G0U5-2LmsLkGnqMG1pHZghSOSS-7YPL",k:"la"},{id:"1GJ_gYYENNui-pCZEZph2LgQIvyMjJZK-",k:"pa"},{id:"1vTk50uBuSEgSKuIAbMo1hxrWQriHe6Ce",k:"dha"},{id:"1O3OGN5SsDkAQ_f-veHG5gZNkS48do6Rs",k:"ja"},{id:"11edzUB3AO4HQhyM1hTSaEGHLNx3nyjHw",k:"ya"},{id:"1j42fDXVLB6hpOXySb2ZjxaYL1NIXsGyq",k:"nya"},{id:"1HoSl_E7RFCSU7A3jk672JZDPD0QrFzQC",k:"ma"},{id:"1Hy0k6acjab9-bF773HLhMejnI6VBFt7f",k:"ga"},{id:"1hYrJw2I80lZsfghTBLTlChXrQlmD-Wf6",k:"ba"},{id:"14QjY6qsE2c8aad6lsD-zHdg-m6-34hF7",k:"tha"},{id:"1lySOP5gYsTOUjdRRWUwKF6ns894zJXca",k:"nga"}];
     const dL1 = [{id:"1_pkOfeu16DT6ZJDLtvrT8w7jS7-8xs_w",k:"a"},{id:"1jjaUt_py0IMwLRXhg_2FQ9Jxm829yelC",k:"na"},{id:"1W-OV7lJGIfeY-XP4_k2zu0nQtbrcGaVW",k:"ca"},{id:"1jnUBAn0-NmcFhtw2E28pqri9drESydre",k:"ra"},{id:"1eY0x4mSbki7iR8h9xZdZYb8Ph66zc1tx",k:"ka"},{id:"1x1cAvuXhCZU06h630fSkIvOgZhe0HbNz",k:"da"},{id:"1cmH-tsmPu-RNxSoNA715Ldi_Wl6ljeFO",k:"ta"},{id:"1ymHs7Fpqn6n47AydkmesiecNiEXc4JKK",k:"sa"},{id:"1ZoWAIopP6AlvOTHneanruoA3NXn9a18h",k:"wa"},{id:"13llrBA3EcosvoiWZyhmBiwkfVl4B0v19",k:"la"},{id:"1HFUHP7c0Cvz6EbT5D2pVnIl5Up3_iHWu",k:"pa"},{id:"18DAdlvrAnNR4aaEHvhf6DkrLrvVAG7Ts",k:"dha"},{id:"1EBC7PRG5BuTbV-lUMExgg9q10m9yi_AN",k:"ja"},{id:"1Xv2lCp0wZTWCMjiXfVm1b_hsFSIGtTE_",k:"ya"},{id:"1ewa7Nr7mj1KNwmKS-F9gGPJcEupaXg5c",k:"nya"},{id:"1JL8-6Y-QUrIQgZe523Z0_xKf8mYK21MK",k:"ma"},{id:"1c9owjS7TVCzTjxC0sMUDgqPRMDOEVJ7U",k:"ga"},{id:"1kEVfkYmXk9QH1kzDrNiX2o-A1ao9jRgf",k:"ba"},{id:"18wZaSduKZ98QukSnpfU9nB4_8oYIcCpC",k:"tha"},{id:"1LG9KpwjEdH_BCEMU4gqoE1pde53yQoxW",k:"nga"}];
 
     const avaMaca = { raka: "1YXVgR8rsRwNTlGhAbGebPxxphQO95BSb", caca: "1TPvKRj-wOyUKgTGz9KbIfez27LhO0jm0" };
     const avaNulis = { raka: "1JPDbyrKl2GCD-_yCKrFMusHlhgFt99g5", caca: "16jaaIO1-Bk91tDbFV-xOz4gJWsCl0BK_" };
-
-    // --- FUNGSI NAVIGASI ---
-    function masukMenu() {
-        nama = document.getElementById('namaSiswa').value;
-        kelas = document.getElementById('kelasSiswa').value;
-        if(!nama || !kelas) return alert("Isi Nama & Kelas!"); 
-        document.getElementById('sapaan').innerText = "Hai, " + nama; 
-        document.getElementById('hal-id').style.display = 'none';
-        document.getElementById('hal-panduan').style.display = 'flex'; 
-    }
-
+        
     function lanjutKeMenu() {
         document.getElementById('hal-panduan').style.display = 'none';
         document.getElementById('hal-menu').style.display = 'flex'; 
