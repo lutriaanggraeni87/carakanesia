@@ -384,39 +384,36 @@
         <button class="btn-3d" onclick="tutupInfo()">OK</button>
     </div>
 </div>
-        <script>
+    <script>
+    // 1. KONFIGURASI & VARIABEL GLOBAL
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
     
-    // Inisialisasi Variabel Global
-    let targetL = 0;
-    let sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
+    let targetL = 0, sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
     let sudahGores = false, sudahKlik = false;
+    let skorPreGlobal = 0; // Menyimpan skor pre-test untuk dikirim saat post-test
 
-    // Perbaikan Deklarasi Audio
-    const audioB = document.getElementById('audioBenar');
-    const audioS = document.getElementById('audioSalah');
-    const audioI = document.getElementById('audioInfo');
-
-    
-    // Fungsi masukMenu yang sebelumnya 'not defined'
-    function masukMenu() {
-        nama = document.getElementById('namaSiswa').value;
-        kelas = document.getElementById('kelasSiswa').value;
-        if(!nama || !kelas) {
-            alert("Isi Nama & Kelas!"); 
-            return;
-        }
-        document.getElementById('sapaan').innerText = "Hai, " + nama; 
-        document.getElementById('hal-id').style.display = 'none';
-        document.getElementById('hal-panduan').style.display = 'flex'; 
-    }
-// Data Soal (Aksara)
     const soalPre = [{id:"1AML1RqIIY8ZQfPDLZJPkKgLdGs7QdAYL",k:"a"},{id:"1nFZr-1q8LMr9Y9tixrKteUDWAY6TFY4w",k:"na"},{id:"15P_rL_bybu657a22Qe25E3wtgurrEYKy",k:"ca"},{id:"1ZKRGsSs3JCRIztTxnrws-9-icajznpJU",k:"ra"},{id:"121vpw8-avRmbIs8ozsG1LDtB0wtGlSgz",k:"ka"},{id:"1bcn1TAQReGdy_LIDBmty5vejiohoQok0",k:"da"},{id:"14ERILBMIXqePNANgbylVype2vwBCeO3Y",k:"ta"},{id:"14RIN28PJy8tw9nOIzgQYs0hafeSxihde",k:"sa"},{id:"1jUZOOjDc15IxSNPNNpahrPvi2K3Cx-_S",k:"wa"},{id:"1-G0U5-2LmsLkGnqMG1pHZghSOSS-7YPL",k:"la"},{id:"1GJ_gYYENNui-pCZEZph2LgQIvyMjJZK-",k:"pa"},{id:"1vTk50uBuSEgSKuIAbMo1hxrWQriHe6Ce",k:"dha"},{id:"1O3OGN5SsDkAQ_f-veHG5gZNkS48do6Rs",k:"ja"},{id:"11edzUB3AO4HQhyM1hTSaEGHLNx3nyjHw",k:"ya"},{id:"1j42fDXVLB6hpOXySb2ZjxaYL1NIXsGyq",k:"nya"},{id:"1HoSl_E7RFCSU7A3jk672JZDPD0QrFzQC",k:"ma"},{id:"1Hy0k6acjab9-bF773HLhMejnI6VBFt7f",k:"ga"},{id:"1hYrJw2I80lZsfghTBLTlChXrQlmD-Wf6",k:"ba"},{id:"14QjY6qsE2c8aad6lsD-zHdg-m6-34hF7",k:"tha"},{id:"1lySOP5gYsTOUjdRRWUwKF6ns894zJXca",k:"nga"}];
     const dL1 = [{id:"1_pkOfeu16DT6ZJDLtvrT8w7jS7-8xs_w",k:"a"},{id:"1jjaUt_py0IMwLRXhg_2FQ9Jxm829yelC",k:"na"},{id:"1W-OV7lJGIfeY-XP4_k2zu0nQtbrcGaVW",k:"ca"},{id:"1jnUBAn0-NmcFhtw2E28pqri9drESydre",k:"ra"},{id:"1eY0x4mSbki7iR8h9xZdZYb8Ph66zc1tx",k:"ka"},{id:"1x1cAvuXhCZU06h630fSkIvOgZhe0HbNz",k:"da"},{id:"1cmH-tsmPu-RNxSoNA715Ldi_Wl6ljeFO",k:"ta"},{id:"1ymHs7Fpqn6n47AydkmesiecNiEXc4JKK",k:"sa"},{id:"1ZoWAIopP6AlvOTHneanruoA3NXn9a18h",k:"wa"},{id:"13llrBA3EcosvoiWZyhmBiwkfVl4B0v19",k:"la"},{id:"1HFUHP7c0Cvz6EbT5D2pVnIl5Up3_iHWu",k:"pa"},{id:"18DAdlvrAnNR4aaEHvhf6DkrLrvVAG7Ts",k:"dha"},{id:"1EBC7PRG5BuTbV-lUMExgg9q10m9yi_AN",k:"ja"},{id:"1Xv2lCp0wZTWCMjiXfVm1b_hsFSIGtTE_",k:"ya"},{id:"1ewa7Nr7mj1KNwmKS-F9gGPJcEupaXg5c",k:"nya"},{id:"1JL8-6Y-QUrIQgZe523Z0_xKf8mYK21MK",k:"ma"},{id:"1c9owjS7TVCzTjxC0sMUDgqPRMDOEVJ7U",k:"ga"},{id:"1kEVfkYmXk9QH1kzDrNiX2o-A1ao9jRgf",k:"ba"},{id:"18wZaSduKZ98QukSnpfU9nB4_8oYIcCpC",k:"tha"},{id:"1LG9KpwjEdH_BCEMU4gqoE1pde53yQoxW",k:"nga"}];
 
     const avaMaca = { raka: "1YXVgR8rsRwNTlGhAbGebPxxphQO95BSb", caca: "1TPvKRj-wOyUKgTGz9KbIfez27LhO0jm0" };
     const avaNulis = { raka: "1JPDbyrKl2GCD-_yCKrFMusHlhgFt99g5", caca: "16jaaIO1-Bk91tDbFV-xOz4gJWsCl0BK_" };
+
+    // 2. FUNGSI NAVIGASI & MENU
+    function masukMenu() {
+        nama = document.getElementById('namaSiswa').value;
+        kelas = document.getElementById('kelasSiswa').value;
+        if(!nama || !kelas) { alert("Isi Nama & Kelas!"); return; }
         
+        // Unlock audio untuk browser
+        [document.getElementById('audioBenar'), document.getElementById('audioSalah'), document.getElementById('audioInfo')].forEach(a => {
+            a.play().then(() => { a.pause(); a.currentTime = 0; }).catch(() => {});
+        });
+
+        document.getElementById('sapaan').innerText = "Hai, " + nama; 
+        document.getElementById('hal-id').style.display = 'none';
+        document.getElementById('hal-panduan').style.display = 'flex'; 
+    }
+
     function lanjutKeMenu() {
         document.getElementById('hal-panduan').style.display = 'none';
         document.getElementById('hal-menu').style.display = 'flex'; 
@@ -438,6 +435,13 @@
         mulaiSesi(targetL);
     }
 
+    function balikKeMenu() {
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('hal-menu').style.display = 'flex';
+        sk = 0; nyawa = 5; benar = 0; 
+    }
+
+    // 3. LOGIKA INTI GAME
     function mulaiSesi(l) {
         curL = l; sk = 0; benar = 0; nyawa = 5; 
         list = (l === 1) ? [...dL1] : [...soalPre];
@@ -449,6 +453,7 @@
 
     function muat() {
         if(sk >= list.length) { tampilkanReward(); return; } 
+        
         document.getElementById('jaw').value = "";
         document.getElementById('fed').innerHTML = ""; 
         let nDisp = document.getElementById('nyawa-disp');
@@ -464,10 +469,35 @@
         if(curL > 0) { setTimeout(initCanvas, 300); } 
         else { document.getElementById('paintCanvas').style.display = "none"; } 
         hapusGoresan();
-        sudahGores = false;
     }
 
-    // --- LOGIKA GAME (CANVAS & CEK) ---
+    function cek() {
+        if(sudahKlik) return;
+        sudahKlik = true; 
+
+        if((curL === 2 || curL === 3) && !sudahGores){
+            tampilInfo("⚠ Patebbel carakannah gellu!");
+            sudahKlik = false; return;
+        }
+
+        let j = document.getElementById('jaw').value.toLowerCase().trim();
+        if(j === list[sk].k){ 
+            benar++; bunyikan("audioBenar"); 
+            document.getElementById('fed').innerHTML = "<span style='color:green; font-size: 2rem;'>Teppa'!</span>"; 
+        } else { 
+            if(curL !== 3) nyawa--;
+            bunyikan("audioSalah");
+            document.getElementById('fed').innerHTML = "<span style='color:red; font-size: 2rem;'>Korang teppa'!</span>"; 
+        }
+
+        if(nyawa <= 0 && curL !== 3) {
+            tampilInfo("Nyawa sobung! Coba' pole ghi...");
+            setTimeout(() => { location.reload(); }, 1500); return;
+        }
+        setTimeout(() => { sk++; muat(); sudahKlik = false; }, 1200); 
+    }
+
+    // 4. CANVAS (MENGGAMBAR)
     function initCanvas() {
         let cv = document.getElementById('paintCanvas');
         let ct = document.getElementById('canvas-container');
@@ -483,13 +513,8 @@
             return { x: t.clientX - r.left, y: t.clientY - r.top };
         };
 
-        cv.onmousedown = cv.ontouchstart = (e) => { 
-            dr = true; sudahGores = true; cx.beginPath(); 
-            let p = pos(e); cx.moveTo(p.x, p.y); 
-        };
-        cv.onmousemove = cv.ontouchmove = (e) => { 
-            if(dr){ let p = pos(e); cx.lineTo(p.x, p.y); cx.stroke(); } 
-        };
+        cv.onmousedown = cv.ontouchstart = (e) => { dr = true; sudahGores = true; cx.beginPath(); let p = pos(e); cx.moveTo(p.x, p.y); };
+        cv.onmousemove = cv.ontouchmove = (e) => { if(dr){ let p = pos(e); cx.lineTo(p.x, p.y); cx.stroke(); } };
         window.onmouseup = window.ontouchend = () => { dr = false; }; 
     }
 
@@ -499,101 +524,33 @@
         sudahGores = false;
     }
 
-    function cek() {
-        if(sudahKlik) return;
-        sudahKlik = true; 
-
-        if((curL === 2 || curL === 3) && !sudahGores){
-            tampilInfo("⚠ Patebbel carakannah gellu!");
-            sudahKlik = false; return;
-        }
-
-        let input = document.getElementById('jaw');
-        let j = input.value ? input.value.toLowerCase().trim() : "";
-
-        if(j === list[sk].k){ 
-            benar++; bunyikan("audioBenar"); 
-            document.getElementById('fed').innerHTML = "<span style='color:green; font-size: 2rem;'>Teppa'!</span>"; 
-        } else { 
-            if(curL !== 3) nyawa--;
-            bunyikan("audioSalah");
-            document.getElementById('fed').innerHTML = "<span style='color:red; font-size: 2rem;'>Korang teppa'!</span>"; 
-        }
-
-        if(nyawa <= 0 && curL !== 3) {
-            tampilInfo("Nyawa sobung! Coba' pole ghi...");
-            setTimeout(() => { location.reload(); }, 1500); return;
-        }
-
-        setTimeout(() => { sk++; muat(); sudahKlik = false; }, 1200); 
-    }
-            function cekJawaban(jawabanUser, jawabanBenar) {
-    if (jawabanUser === jawabanBenar) {
-        // Mainkan audio benar
-        let sound = document.getElementById("audioBenar");
-        sound.currentTime = 0; // Reset ke detik 0 biar bisa bunyi berkali-kali
-        sound.play().catch(e => console.log("Audio terblokir, butuh klik user!"));
-        
-        // ... logika skor ...
-    } else {
-        // Mainkan audio salah
-        let sound = document.getElementById("audioSalah");
-        sound.currentTime = 0;
-        sound.play();
-    }
-}
-
-// Untuk info tebalkan carakan
-function tampilkanInfoTebalkan() {
-    document.getElementById("audioInfo").play();
-    alert("Enga'! Patebbhel gellu Carakannah ghi...");
-}
-function mainkanSuara(jenis) {
-    let audio;
-    if (jenis === 'benar') audio = document.getElementById("audioBenar");
-    else if (jenis === 'salah') audio = document.getElementById("audioSalah");
-    else audio = document.getElementById("audioInfo");
-
-    if (audio) {
-        audio.currentTime = 0; // Agar bisa diputar berkali-kali tanpa tunggu habis
-        audio.play().catch(error => {
-            console.log("Audio gagal putar karena kebijakan browser. User harus klik tombol dulu.");
-        });
-    }
-}
-    // --- REWARD & SPREADSHEET ---
+    // 5. REWARD, BADGE & SPREADSHEET
     function tampilkanReward() {
-    let s = benar * 5;
-    document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-    document.getElementById('teks-skor').innerText = "Skor: " + s;
-    document.getElementById('modal-skor').style.display = 'flex';
+        let s = benar * 5;
+        document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
+        document.getElementById('teks-skor').innerText = "Skor: " + s;
+        document.getElementById('modal-skor').style.display = 'flex';
 
-    let dataKirim = {
-        nama: nama,
-        kelas: kelas
-    };
+        let dataKirim = { nama: nama, kelas: kelas };
 
-    if (curL === 0) {
-        dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
-        dataKirim.skor_pretes = s;
+        if (curL === 0) {
+            dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
+            dataKirim.skor_pretes = s;
+            skorPreGlobal = s;
+        } else if (curL === 3) {
+            dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
+            dataKirim.skor_post_test = s;
+            dataKirim.skor_pretes = skorPreGlobal;
+            dataKirim.badge_capaian = (s >= 75) ? "UTAMA" : (s >= 55 ? "MADYA" : "PEMULA");
+        }
+
+        fetch(URL_SCRIPT, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dataKirim)
+        }).catch(err => console.error("Error kirim:", err));
     }
-
-    if (curL === 3) {
-        dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
-        dataKirim.skor_post_test = s;
-        // PENGATURAN BADGE UNTUK SPREADSHEET
-        dataKirim.badge_capaian = (s > 75) ? "UTAMA" : (s > 55 ? "MADYA" : "PEMULA");
-    }
-
-    fetch(URL_SCRIPT, {
-        method: "POST",
-        mode: "no-cors", // Tambahkan ini untuk mengurangi error CORS saat tes
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataKirim)
-    })
-    .then(res => console.log("Data terkirim"))
-    .catch(err => console.error("Error kirim:", err));
-}
 
     function tutupModalSkor() {
         document.getElementById('modal-skor').style.display = 'none'; 
@@ -606,139 +563,73 @@ function mainkanSuara(jenis) {
 
     function keLayarBadge() {
         let s = benar * 5;
-        let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
+        let idB = (s >= 75) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
         document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
-        document.getElementById('teks-badge').innerText = (s >= 80) ? "HEBAT!" : (s >= 55 ? "BAGUS!" : "TERUS BELAJAR!"); 
+        document.getElementById('teks-badge').innerText = (s >= 75) ? "HEBAT! (UTAMA)" : (s >= 55 ? "BAGUS! (MADYA)" : "TERUS BELAJAR! (PEMULA)"); 
         document.getElementById('hal-reward-1').style.display = 'none';
         document.getElementById('hal-reward-2').style.display = 'flex';
     }
 
+    // 6. LEADERBOARD & PENUTUP
     function bukaLeaderboardOtomatis() {
-    // Panggil Audio Tepuk Tangan saat leaderboard buka
-    document.getElementById("audioBenar").play().catch(e => console.log("Menunggu interaksi user"));
-
-    document.getElementById('hal-leaderboard').style.display = 'flex';
-    
-    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-        data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
-        let top10 = data.slice(0, 10);
-
-        let html = ""; 
-        top10.forEach((p, index) => {
-            let badgeID = "";
-            let badgeNama = (p.badge_capaian || "PEMULA").toUpperCase();
-
-            if (badgeNama.includes("UTAMA")) badgeID = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
-            else if (badgeNama.includes("MADYA")) badgeID = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
-            else badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
-
-            let badgeURL = `https://drive.google.com/uc?export=view&id=${badgeID}`;
-
-            html += `
-            <div class="rank-card" style="animation-delay: ${index * 0.05}s">
-                <div class="rank-number">${index + 1}</div>
-                <div class="user-name">${p.nama}</div>
-                <div class="score-pre">Pre: ${p.skor_pretes || 0}</div>
-                <div class="badge-box">
-                    <img src="${badgeURL}" class="badge-icon">
-                    <span>${badgeNama}</span>
-                </div>
-                <div class="score-post">${p.skor_post_test || 0}</div>
-            </div>`; 
+        bunyikan("audioBenar"); 
+        document.getElementById('hal-leaderboard').style.display = 'flex';
+        
+        fetch(URL_SCRIPT).then(r => r.json()).then(data => {
+            data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
+            let html = ""; 
+            data.slice(0, 10).forEach((p, index) => {
+                let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
+                let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
+                
+                html += `
+                <div class="rank-card" style="animation-delay: ${index * 0.05}s">
+                    <div class="rank-number">${index + 1}</div>
+                    <div class="user-name">${p.nama}</div>
+                    <div class="score-pre">Pre: ${p.skor_pretes || 0}</div>
+                    <div class="badge-box">
+                        <img src="https://drive.google.com/uc?export=view&id=${bID}" class="badge-icon">
+                        <span>${bNama}</span>
+                    </div>
+                    <div class="score-post">${p.skor_post_test || 0}</div>
+                </div>`; 
+            });
+            document.getElementById('leaderboard-content').innerHTML = html;
+        }).catch(() => {
+            document.getElementById('leaderboard-content').innerHTML = "Gagal memuat data.";
         });
-        document.getElementById('leaderboard-content').innerHTML = html;
-    });
-}
 
-    setTimeout(() => {
-        document.getElementById('hal-leaderboard').style.display = 'none';
-        tampilkanLayarPenutup();
-    }, 15000);
-}
+        setTimeout(() => {
+            document.getElementById('hal-leaderboard').style.display = 'none';
+            tampilkanLayarPenutup();
+        }, 15000);
+    }
+
+    function tutupGameKeLeaderboard() { 
+        document.getElementById('hal-reward-2').style.display = 'none';
+        bukaLeaderboardOtomatis(); 
+    }
+
     function tampilkanLayarPenutup() {
         document.getElementById('hal-penutup').style.display = 'flex';
         setTimeout(() => { location.reload(); }, 5000);
     }
 
-    function balikKeMenu() {
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('hal-menu').style.display = 'flex';
-        sk = 0; nyawa = 5; benar = 0; 
-    }
-
-    function bunyikan(id){
+    // 7. FUNGSI UTILITY (AUDIO & INFO)
+    function bunyikan(id) {
         const a = document.getElementById(id);
         if(a) { a.currentTime = 0; a.play().catch(()=>{}); }
     }
 
-    function tampilInfo(pesan){
+    function tampilInfo(pesan) {
         bunyikan("audioInfo");
         document.getElementById('teks-info').innerText = pesan; 
         document.getElementById('modal-info').style.display = 'flex';
     }
 
-    function tutupInfo(){ document.getElementById('modal-info').style.display = 'none'; }
+    function tutupInfo() { document.getElementById('modal-info').style.display = 'none'; }
     
-    function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
-    function tutupGameKeLeaderboard() { 
-        document.getElementById('hal-reward-2').style.display = 'none';
-        bukaLeaderboardOtomatis(); 
-    }
-            // Fungsi hitung badge otomatis
-    function hitungBadge(nilai) {
-    if (nilai > 75) return "UTAMA";
-    if (nilai > 55) return "MADYA";
-    return "PEMULA";
-}
-
-// Fungsi kirim data pre-test / post-test
-function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
-    const badge = hitungBadge(nilaiPostTest);
-    const data = {
-        nama: nama,
-        kelas: kelas,
-        skor_pretes: nilaiPreTest,
-        tanggal_pretes: new Date().toLocaleString("id-ID"),
-        skor_post_test: nilaiPostTest,
-        tanggal_post_test: new Date().toLocaleString("id-ID"),
-        badge_capaian: badge
-    };
-
-    fetch(URL_SCRIPT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-    .then(res => console.log("Data tersimpan:", res))
-    .catch(err => console.error("Error kirim data:", err));
-}
-
-// --- Fungsi otomatis dipanggil setelah sesi selesai ---
-function tampilkanRewardFinal(benar, nama, kelas){
-    const nilai = benar * 5;
-    document.getElementById('bintang-container').innerText = (nilai >= 80) ? "⭐⭐⭐" : (nilai >= 60 ? "⭐⭐" : "⭐");
-    document.getElementById('teks-skor').innerText = "Skor: " + nilai;
-    document.getElementById('modal-skor').style.display = 'flex';
-
-    // Kirim data otomatis
-    kirimData(nama, kelas, window.nilaiPreTest || 0, nilai);
-
-    // Tampilkan badge
-    let badgeId = (nilai >= 75) ? "ID_BADGE_UTAMA" : (nilai > 55 ? "ID_BADGE_MADYA" : "ID_BADGE_PEMULA");
-    document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + badgeId;
-    document.getElementById('teks-badge').innerText = hitungBadge(nilai);
-
-    document.getElementById('hal-reward-1').style.display = 'none';
-    document.getElementById('hal-reward-2').style.display = 'flex';
-}
-
-// --- Contoh panggilan otomatis (ganti sesuai variabel game) ---
-// Pastikan kamu simpan nilai pre-test sebelumnya di window.nilaiPreTest
-window.namaSiswa = "Siswa Contoh";
-window.kelasSiswa = "Kelas 1";
-window.nilaiPreTest = 80;  // Simpan skor pre-test sebelumnya
-let nilaiPostTest = 78;     // Nilai post-test dari game
-
+    function nav(d) { if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
 // Langsung kirim saat post-test selesai
 kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTest);
 </script>
@@ -746,6 +637,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
