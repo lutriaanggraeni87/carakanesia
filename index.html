@@ -531,25 +531,34 @@
         document.getElementById('teks-skor').innerText = "Skor: " + s;
         document.getElementById('modal-skor').style.display = 'flex';
 
-        let dataKirim = { nama: nama, kelas: kelas };
+        // Persiapan data dasar
+        let dataKirim = { 
+            nama: nama, 
+            kelas: kelas 
+        };
 
         if (curL === 0) {
+            // LOGIKA PRE-TEST: Kirim tanggal & skor ke sheet progres_user
             dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
             dataKirim.skor_pretes = s;
-            skorPreGlobal = s;
+            skorPreGlobal = s; // Simpan untuk cadangan post-test nanti
         } else if (curL === 3) {
+            // LOGIKA POST-TEST
             dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
             dataKirim.skor_post_test = s;
-            dataKirim.skor_pretes = skorPreGlobal;
+            dataKirim.skor_pretes = skorPreGlobal; // Sertakan skor pre-test sebelumnya
             dataKirim.badge_capaian = (s >= 75) ? "UTAMA" : (s >= 55 ? "MADYA" : "PEMULA");
         }
 
+        // PROSES KIRIM KE GOOGLE SHEETS
         fetch(URL_SCRIPT, {
             method: "POST",
             mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dataKirim)
-        }).catch(err => console.error("Error kirim:", err));
+        }).then(() => {
+            console.log("Data berhasil dikirim ke Sheet:", dataKirim);
+        }).catch(err => console.error("Gagal kirim ke Sheet:", err));
     }
 
     function tutupModalSkor() {
@@ -572,22 +581,19 @@
 
     // 6. LEADERBOARD & PENUTUP
    // --- POTONGAN KHUSUS LEADERBOARD ---
-    function bukaLeaderboardOtomatis() {
+   function bukaLeaderboardOtomatis() {
         bunyikan("audioInfo"); 
         document.getElementById('hal-leaderboard').style.display = 'flex';
         document.getElementById('leaderboard-content').innerHTML = "Sedang memuat peringkat...";
         
         fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-            // Urutkan berdasarkan skor post test tertinggi (Descending)
+            // Urutkan: Yg punya skor post_test tertinggi di atas
             data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
             
             let html = ""; 
-            // Ambil 10 peringkat teratas saja
-            let topTen = data.slice(0, 10);
-
-            topTen.forEach((p, index) => {
+            // Ambil 10 peringkat teratas
+            data.slice(0, 10).forEach((p, index) => {
                 let bNama = (p.badge_capaian || "PEMULA").toUpperCase();
-                // Tentukan icon badge berdasarkan kategori
                 let bID = bNama.includes("UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : 
                           (bNama.includes("MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
                 
@@ -595,27 +601,23 @@
                 <div class="rank-card">
                     <div class="rank-number">${index + 1}</div>
                     <div class="user-name">${p.nama}</div>
+                    <div class="score-pre">Pre: ${p.skor_pretes || 0}</div>
                     <div class="badge-box">
                         <img src="https://drive.google.com/uc?export=view&id=${bID}" class="badge-icon">
-                        <span style="font-size: 0.7rem; display: block;">${bNama}</span>
                     </div>
                     <div class="score-post">${p.skor_post_test || 0}</div>
                 </div>`; 
             });
             document.getElementById('leaderboard-content').innerHTML = html;
-        }).catch(err => {
-            console.error(err);
+        }).catch(() => {
             document.getElementById('leaderboard-content').innerHTML = "Gagal memuat data peringkat.";
         });
 
-        // Tampilkan selama 15 detik sebelum ke layar penutup
         setTimeout(() => {
             document.getElementById('hal-leaderboard').style.display = 'none';
             tampilkanLayarPenutup();
         }, 15000);
     }
-    // --- AKHIR POTONGAN LEADERBOARD ---
-
     function tutupGameKeLeaderboard() { 
         document.getElementById('hal-reward-2').style.display = 'none';
         bukaLeaderboardOtomatis(); 
@@ -648,6 +650,7 @@ kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTes
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
