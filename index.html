@@ -420,6 +420,8 @@ let skorPostTest = 0;
 
     // Fungsi masukMenu yang sebelumnya 'not defined'
     function masukMenu() {
+        document.getElementById('menu').style.display='flex';
+        document.getElementById('game').style.display='none';
         nama = document.getElementById('namaSiswa').value;
         kelas = document.getElementById('kelasSiswa').value;
         if(!nama || !kelas) {
@@ -740,15 +742,13 @@ document.getElementById('game').style.display = 'none';
 
     kirimData(nama, kelas, skorPreTest, skorPostTest);
 }
-            function masukMenu(){
-    document.getElementById('menu').style.display='flex';
-    document.getElementById('game').style.display='none';
-}
+            
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
