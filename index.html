@@ -190,16 +190,6 @@
     margin: auto;
 }
 
-#leaderboard-content {
-    display: flex;
-    flex-direction: column;
-    gap: 6px; /* Jarak antar baris diperkecil */
-    padding: 5px 10px;
-    width: 98%;
-    max-width: 550px;
-    margin: auto;
-}
-
 .rank-card {
     display: flex;
     align-items: center;
@@ -469,8 +459,10 @@ function masukMenu() {
     }
 
     function muat() {
-        if(sk >= list.length) { tampilkanReward(); return; } 
-        
+        if(sk >= list.length) { 
+    tampilkanRewardFinal(benar, nama, kelas);
+    return; 
+}
         document.getElementById('jaw').value = "";
         document.getElementById('fed').innerHTML = ""; 
         let nDisp = document.getElementById('nyawa-disp');
@@ -548,26 +540,31 @@ function tampilkanRewardFinal(benar, nama, kelas){
     document.getElementById('bintang-container').innerText = (nilai >= 80) ? "⭐⭐⭐" : (nilai >= 60 ? "⭐⭐" : "⭐");
     document.getElementById('teks-skor').innerText = "Skor: " + nilai;
     document.getElementById('modal-skor').style.display = 'flex';
-
+if(curL === 0){
+    skorPreGlobal = benar * 5;
+}
     // Kirim data otomatis
-    kirimData(nama, kelas, window.nilaiPreTest || 0, nilai);
+    if(curL === 3){
+    kirimData(nama, kelas, skorPreGlobal, nilai);
+}
 
     // Tampilkan badge
-    let badgeId = (nilai >= 75) ? "ID_BADGE_UTAMA" : (nilai > 55 ? "ID_BADGE_MADYA" : "ID_BADGE_PEMULA");
+    let badgeId = (nilai >= 75) 
+    ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV"
+    : (nilai >= 55 
+        ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa"
+        : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le");
     document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + badgeId;
     document.getElementById('teks-badge').innerText = hitungBadge(nilai);
 
     document.getElementById('hal-reward-1').style.display = 'none';
     document.getElementById('hal-reward-2').style.display = 'flex';
 }
-
-// --- Contoh panggilan otomatis (ganti sesuai variabel game) ---
-// Pastikan kamu simpan nilai pre-test sebelumnya di window.nilaiPreTest
-window.namaSiswa = "Siswa Contoh";
-window.kelasSiswa = "Kelas 1";
-window.nilaiPreTest = 80;  // Simpan skor pre-test sebelumnya
-let nilaiPostTest = 78;     // Nilai post-test dari game
-
+        function hitungBadge(nilai){
+    if(nilai >= 75) return "UTAMA";
+    if(nilai >= 55) return "MADYA";
+    return "PEMULA";
+}
     function tutupModalSkor() {
         document.getElementById('modal-skor').style.display = 'none'; 
         if (curL === 3) { 
@@ -587,6 +584,25 @@ let nilaiPostTest = 78;     // Nilai post-test dari game
     }
 
     // 6. LEADERBOARD & PENUTUP
+        function kirimData(nama, kelas, skorPre, skorPost) {
+    const tanggal = new Date().toLocaleString("id-ID");
+
+    fetch(URL_SCRIPT, {
+        method: "POST",
+        body: JSON.stringify({
+            nama: nama,
+            kelas: kelas,
+            tanggal: tanggal,
+            skor_pre_test: skorPre,
+            skor_post_test: skorPost,
+            badge_capaian: hitungBadge(skorPost)
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.text())
+    .then(res => console.log("Data terkirim"))
+    .catch(err => console.error("Gagal kirim:", err));
+}
    function bukaLeaderboardOtomatis() {
     document.getElementById('hal-leaderboard').style.display = 'flex';
     
@@ -610,7 +626,7 @@ let nilaiPostTest = 78;     // Nilai post-test dari game
                 badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
             }
 
-            let badgeURL = `https://lh3.googleusercontent.com/u/0/d/${badgeID}`;
+            let badgeURL = 'https://drive.google.com/thumbnail?id=${badgeID}';
 
             html += `
             <div class="rank-card" style="animation-delay: ${index * 0.1}s">
@@ -622,17 +638,19 @@ let nilaiPostTest = 78;     // Nilai post-test dari game
                     <img src="${badgeURL}" class="badge-icon" alt="badge">
                     <span>${badgeNama}</span>
                 </div>
-                <div class="score-box">${p.skor_post_test || 0}</div>
+                <div class="score-post">${p.skor_post_test || 0}</div>
             </div>`; 
         });
 
-        document.getElementById('leaderboard-content').innerHTML = html;
+       document.getElementById('leaderboard-content').innerHTML = html;
     });
 
     setTimeout(() => {
         document.getElementById('hal-leaderboard').style.display = 'none';
         tampilkanLayarPenutup();
     }, 15000);
+
+}
        
     function tutupGameKeLeaderboard() { 
         document.getElementById('hal-reward-2').style.display = 'none';
@@ -646,8 +664,7 @@ let nilaiPostTest = 78;     // Nilai post-test dari game
        function tutupInfo() { document.getElementById('modal-info').style.display = 'none'; }
     
     function nav(d) { if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
-// Langsung kirim saat post-test selesai
-kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTest);
+
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
