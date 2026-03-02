@@ -549,7 +549,8 @@ let skorPostTest = 0;
     }
 
     // --- REWARD & SPREADSHEET ---
-   function tampilkanReward() {
+  // ================= REWARD =================
+function tampilkanReward() {
 
     let nilai = benar * 5;
 
@@ -566,159 +567,31 @@ let skorPostTest = 0;
         (nilai >= 60 ? "⭐⭐" : "⭐");
 
     document.getElementById('teks-skor').innerText = "Skor: " + nilai;
-
     document.getElementById('modal-skor').style.display = 'flex';
 }
 
-    let dataKirim = {
-        nama: nama,
-        kelas: kelas
-    };
+// ================= TUTUP MODAL =================
+function tutupModalSkor(){
+    document.getElementById('modal-skor').style.display='none';
 
-    if (curL === 0) {
-        dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
-        dataKirim.skor_pretes = nilai;
+    if(curL === 3){
+        tampilkanRewardFinal();
+    } else {
+        balikKeMenu();
     }
-
-    if (curL === 3) {
-        dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
-        dataKirim.skor_post_test = nilai;
-        // PENGATURAN BADGE UNTUK SPREADSHEET
-        dataKirim.badge_capaian = (nilai > 75) ? "UTAMA" : (nilai > 55 ? "MADYA" : "PEMULA");
-    }
-
-    fetch(URL_SCRIPT, {
-        method: "POST",
-        mode: "no-cors", // Tambahkan ini untuk mengurangi error CORS saat tes
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dataKirim)
-    })
-    .then(res => console.log("Data terkirim"))
-    .catch(err => console.error("Error kirim:", err));
-    function tutupModalSkor(){
-   document.getElementById('modal-skor').style.display='none';
-
-   if(curL === 3){
-       tampilkanRewardFinal();
-   } else {
-       balikKeMenu();
-   }
 }
-    function keLayarBadge() {
-        let s = benar * 5;
-        let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
-        document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + idB;
-        document.getElementById('teks-badge').innerText = (s >= 80) ? "HEBAT!" : (s >= 55 ? "BAGUS!" : "TERUS BELAJAR!"); 
-        document.getElementById('hal-reward-1').style.display = 'none';
-        document.getElementById('hal-reward-2').style.display = 'flex';
-    }
 
-    function bukaLeaderboardOtomatis() {
-    document.getElementById('hal-leaderboard').style.display = 'flex';
-    
-    fetch(URL_SCRIPT).then(r => r.json()).then(data => {
-        // Urutkan 10 teratas
-        data.sort((a, b) => (b.skor_post_test || 0) - (a.skor_post_test || 0));
-        let top10 = data.slice(0, 10);
-
-        let html = ""; 
-        
-        top10.forEach((p, index) => {
-            // Logika Link Gambar Badge berdasarkan ID yang kamu berikan
-            let badgeID = "";
-            let badgeNama = (p.badge_capaian || "PEMULA").toUpperCase();
-
-            if (badgeNama.includes("UTAMA")) {
-                badgeID = "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV";
-            } else if (badgeNama.includes("MADYA")) {
-                badgeID = "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa";
-            } else {
-                badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
-            }
-
-            let badgeURL = `https://lh3.googleusercontent.com/u/0/d/${badgeID}`;
-
-            html += `
-            <div class="rank-card" style="animation-delay: ${index * 0.1}s">
-                <div class="rank-number">${index + 1}</div>
-                <div class="user-info">
-                    <span class="user-name">${p.nama}</span>
-                </div>
-                <div class="badge-box">
-                    <img src="${badgeURL}" class="badge-icon" alt="badge">
-                    <span>${badgeNama}</span>
-                </div>
-                <div class="score-box">${p.skor_post_test || 0}</div>
-            </div>`; 
-        });
-
-        document.getElementById('leaderboard-content').innerHTML = html;
-    });
-
-    setTimeout(() => {
-        document.getElementById('hal-leaderboard').style.display = 'none';
-        tampilkanLayarPenutup();
-    }, 15000);
-}
-    function tampilkanLayarPenutup() {
-        document.getElementById('hal-penutup').style.display = 'flex';
-        setTimeout(() => { location.reload(); }, 5000);
-    }
-
-    function balikKeMenu() {
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('hal-menu').style.display = 'flex';
-        sk = 0; nyawa = 5; benar = 0; 
-    }
-
-    function bunyikan(id){
-        const a = document.getElementById(id);
-        if(a) { a.currentTime = 0; a.play().catch(()=>{}); }
-    }
-
-    function tampilInfo(pesan){
-        bunyikan("audioInfo");
-        document.getElementById('teks-info').innerText = pesan; 
-        document.getElementById('modal-info').style.display = 'flex';
-    }
-
-    function tutupInfo(){ document.getElementById('modal-info').style.display = 'none'; }
-    
-    function nav(d){ if(sk+d >= 0 && sk+d < list.length){ sk+=d; muat(); } }
-    function tutupGameKeLeaderboard() { 
-        document.getElementById('hal-reward-2').style.display = 'none';
-        bukaLeaderboardOtomatis(); 
-    }
-            // Fungsi hitung badge otomatis
-    function hitungBadge(nilai) {
-    if (nilai > 75) return "UTAMA";
-    if (nilai > 55) return "MADYA";
+// ================= HITUNG BADGE =================
+function hitungBadge(nilai) {
+    if (nilai >= 80) return "UTAMA";
+    if (nilai >= 60) return "MADYA";
     return "PEMULA";
 }
 
-// Fungsi kirim data pre-test / post-test
-function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
-    const badge = hitungBadge(nilaiPostTest);
-    const data = {
-        nama: nama,
-        kelas: kelas,
-        skor_pretes: nilaiPreTest,
-        tanggal_pretes: new Date().toLocaleString("id-ID"),
-        skor_post_test: nilaiPostTest,
-        tanggal_post_test: new Date().toLocaleString("id-ID"),
-        badge_capaian: badge
-    };
-
-    fetch(URL_SCRIPT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    })
-    .then(res => console.log("Data tersimpan:", res))
-    .catch(err => console.error("Error kirim data:", err));
-// --- Fungsi otomatis dipanggil setelah sesi selesai ---
+// ================= TAMPILKAN BADGE FINAL =================
 function tampilkanRewardFinal(){
-document.getElementById('game').style.display = 'none';
+
+    document.getElementById('game').style.display = 'none';
 
     let badgeNama = hitungBadge(skorPostTest);
 
@@ -737,18 +610,39 @@ document.getElementById('game').style.display = 'none';
 
     document.getElementById('hal-reward-2').style.display = 'flex';
 
+    // kirim ke spreadsheet
     kirimData(nama, kelas, skorPreTest, skorPostTest);
 }
-}
-function masukMenu(){
-    document.getElementById('menu').style.display='flex';
-    document.getElementById('game').style.display='none';
-}            
+
+// ================= KIRIM DATA =================
+function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
+
+    const badge = hitungBadge(nilaiPostTest);
+
+    const data = {
+        nama: nama,
+        kelas: kelas,
+        skor_pretes: nilaiPreTest,
+        tanggal_pretes: new Date().toLocaleString("id-ID"),
+        skor_post_test: nilaiPostTest,
+        tanggal_post_test: new Date().toLocaleString("id-ID"),
+        badge_capaian: badge
+    };
+
+    fetch(URL_SCRIPT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(() => console.log("Data tersimpan"))
+    .catch(err => console.error("Error kirim:", err));
+}          
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
