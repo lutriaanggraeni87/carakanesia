@@ -577,14 +577,14 @@ let skorPostTest = 0;
 
     if (curL === 0) {
         dataKirim.tanggal_pretes = new Date().toLocaleString("id-ID");
-        dataKirim.skor_pretes = s;
+        dataKirim.skor_pretes = nilai;
     }
 
     if (curL === 3) {
         dataKirim.tanggal_post_test = new Date().toLocaleString("id-ID");
-        dataKirim.skor_post_test = s;
+        dataKirim.skor_post_test = nilai;
         // PENGATURAN BADGE UNTUK SPREADSHEET
-        dataKirim.badge_capaian = (s > 75) ? "UTAMA" : (s > 55 ? "MADYA" : "PEMULA");
+        dataKirim.badge_capaian = (nilai > 75) ? "UTAMA" : (nilai > 55 ? "MADYA" : "PEMULA");
     }
 
     fetch(URL_SCRIPT, {
@@ -749,6 +749,7 @@ function masukMenu(){
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
