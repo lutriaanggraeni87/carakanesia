@@ -398,7 +398,10 @@
     
     // Inisialisasi Variabel Global
     let targetL = 0;
-    let sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
+let sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
+
+let skorPreTest = 0;
+let skorPostTest = 0;
     let sudahGores = false, sudahKlik = false;
 
     // Perbaikan Deklarasi Audio
@@ -546,11 +549,26 @@
     }
 
     // --- REWARD & SPREADSHEET ---
-    function tampilkanReward() {
-    let s = benar * 5;
-    document.getElementById('bintang-container').innerText = (s >= 80) ? "⭐⭐⭐" : (s >= 60 ? "⭐⭐" : "⭐");
-    document.getElementById('teks-skor').innerText = "Skor: " + s;
+   function tampilkanReward() {
+
+    let nilai = benar * 5;
+
+    if(curL === 0){   // PRETEST
+        skorPreTest = nilai;
+    }
+
+    if(curL === 3){   // POSTTEST
+        skorPostTest = nilai;
+    }
+
+    document.getElementById('bintang-container').innerText =
+        (nilai >= 80) ? "⭐⭐⭐" :
+        (nilai >= 60 ? "⭐⭐" : "⭐");
+
+    document.getElementById('teks-skor').innerText = "Skor: " + nilai;
+
     document.getElementById('modal-skor').style.display = 'flex';
+}
 
     let dataKirim = {
         nama: nama,
@@ -580,13 +598,16 @@
 }
 
     function tutupModalSkor() {
-        document.getElementById('modal-skor').style.display = 'none'; 
-        if (curL === 3) { 
-            document.getElementById('nama-selamat').innerText = nama;
-            document.getElementById('game').style.display = 'none';
-            document.getElementById('hal-reward-1').style.display = 'flex'; 
-        } else { balikKeMenu(); }
+        function tutupModalSkor() {
+
+    document.getElementById('modal-skor').style.display = 'none';
+
+    if(curL === 3){
+        tampilkanRewardFinal();
+    } else {
+        balikKeMenu();
     }
+}
 
     function keLayarBadge() {
         let s = benar * 5;
@@ -703,38 +724,38 @@ function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
 }
 
 // --- Fungsi otomatis dipanggil setelah sesi selesai ---
-function tampilkanRewardFinal(benar, nama, kelas){
-    const nilai = benar * 5;
-    document.getElementById('bintang-container').innerText = (nilai >= 80) ? "⭐⭐⭐" : (nilai >= 60 ? "⭐⭐" : "⭐");
-    document.getElementById('teks-skor').innerText = "Skor: " + nilai;
-    document.getElementById('modal-skor').style.display = 'flex';
+function tampilkanRewardFinal(){
 
-    // Kirim data otomatis
-    kirimData(nama, kelas, window.nilaiPreTest || 0, nilai);
+    document.getElementById('game').style.display = 'none';
 
-    // Tampilkan badge
-    let badgeId = (nilai >= 75) ? "ID_BADGE_UTAMA" : (nilai > 55 ? "ID_BADGE_MADYA" : "ID_BADGE_PEMULA");
-    document.getElementById('img-badge').src = "https://drive.google.com/thumbnail?id=" + badgeId;
-    document.getElementById('teks-badge').innerText = hitungBadge(nilai);
+    // HITUNG BADGE DARI POST TEST
+    let badgeNama = hitungBadge(skorPostTest);
 
-    document.getElementById('hal-reward-1').style.display = 'none';
+    let badgeId =
+        (badgeNama === "UTAMA") ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" :
+        (badgeNama === "MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" :
+        "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
+
+    // TAMPILKAN NILAI PRE & POST
+    document.getElementById('teks-badge').innerHTML =
+        "Nilai Pretest : <b>" + skorPreTest + "</b><br>" +
+        "Nilai Posttest : <b>" + skorPostTest + "</b><br><br>" +
+        "Badge Capaian : <b>" + badgeNama + "</b>";
+
+    document.getElementById('img-badge').src =
+        "https://drive.google.com/thumbnail?id=" + badgeId;
+
     document.getElementById('hal-reward-2').style.display = 'flex';
+
+    // KIRIM KE SPREADSHEET
+    kirimData(nama, kelas, skorPreTest, skorPostTest);
 }
-
-// --- Contoh panggilan otomatis (ganti sesuai variabel game) ---
-// Pastikan kamu simpan nilai pre-test sebelumnya di window.nilaiPreTest
-window.namaSiswa = "Siswa Contoh";
-window.kelasSiswa = "Kelas 1";
-window.nilaiPreTest = 80;  // Simpan skor pre-test sebelumnya
-let nilaiPostTest = 78;     // Nilai post-test dari game
-
-// Langsung kirim saat post-test selesai
-kirimData(window.namaSiswa, window.kelasSiswa, window.nilaiPreTest, nilaiPostTest);
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
