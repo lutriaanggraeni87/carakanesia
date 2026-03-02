@@ -370,7 +370,7 @@
        // 1. KONFIGURASI & VARIABEL GLOBAL
     const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbzRoAYq1CDSnPBXQ4JMJce9u8AcDJx_vQ1dRoiFNUo7BU7FdaEqbTOSnsBrayy9L1wv/exec";
     
-    let targetL = 0, sk = 0, nyawa = 5, list = [], curL = 0, nama = "", kelas = "", benar = 0;
+    let targetL = 1, sk = 0, nyawa = 5, list = [], curL = 1, nama = "", kelas = "", benar = 0;
     let sudahGores = false, sudahKlik = false;
     let skorPreGlobal = 0; // Menyimpan skor pre-test untuk dikirim saat post-test
 
@@ -459,7 +459,7 @@ function masukMenu() {
     }
 
     function muat() {
-       if(sk >= list.length) {
+       if(sk >= list.length){
 
     if(curL === 1){
         skorPreGlobal = Math.round((benar/list.length)*100);
@@ -646,7 +646,7 @@ if(curL === 0){
                 badgeID = "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
             }
 
-            let badgeURL = 'https://drive.google.com/thumbnail?id=${badgeID}';
+            let badgeURL = `https://drive.google.com/thumbnail?id=${badgeID}`;
 
             html += `
             <div class="rank-card" style="animation-delay: ${index * 0.1}s">
@@ -690,6 +690,7 @@ if(curL === 0){
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
