@@ -597,16 +597,15 @@ let skorPostTest = 0;
     })
     .then(res => console.log("Data terkirim"))
     .catch(err => console.error("Error kirim:", err));
-    function tutupModalSkor() {
-        function tutupModalSkor() {
+    function tutupModalSkor(){
+   document.getElementById('modal-skor').style.display='none';
 
-    document.getElementById('modal-skor').style.display = 'none';
-
-    if(curL === 3){
-        tampilkanRewardFinal();
-    } else {
-        balikKeMenu();
-    }
+   if(curL === 3){
+       tampilkanRewardFinal();
+   } else {
+       balikKeMenu();
+   }
+}
     function keLayarBadge() {
         let s = benar * 5;
         let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
@@ -748,6 +747,7 @@ document.getElementById('game').style.display = 'none';
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
