@@ -596,7 +596,6 @@ let skorPostTest = 0;
     .then(res => console.log("Data terkirim"))
     .catch(err => console.error("Error kirim:", err));
 }
-
     function tutupModalSkor() {
         function tutupModalSkor() {
 
@@ -607,8 +606,6 @@ let skorPostTest = 0;
     } else {
         balikKeMenu();
     }
-}
-
     function keLayarBadge() {
         let s = benar * 5;
         let idB = (s >= 80) ? "1D6O5F4Sx4R9viU9mLWKDCwsWHVVjWYZV" : (s >= 55 ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" : "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le"); 
@@ -750,11 +747,16 @@ function tampilkanRewardFinal(){
     // KIRIM KE SPREADSHEET
     kirimData(nama, kelas, skorPreTest, skorPostTest);
 }
+            function masukMenu(){
+    document.getElementById('menu').style.display='flex';
+    document.getElementById('game').style.display='none';
+}
 </script>
     <script type="text/javascript"> var sc_project=13206955, sc_invisible=1, sc_security="ac4cbfa5"; </script>
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
