@@ -459,9 +459,29 @@ function masukMenu() {
     }
 
     function muat() {
-        if(sk >= list.length) { 
-    tampilkanRewardFinal(benar, nama, kelas);
-    return; 
+       if(sk >= list.length) {
+
+    if(curL === 1){
+        skorPreGlobal = Math.round((benar/list.length)*100);
+        curL = 2;
+        sk = 0;
+        benar = 0;
+        muat();
+        return;
+    }
+
+    if(curL === 2){
+        curL = 3;
+        sk = 0;
+        benar = 0;
+        muat();
+        return;
+    }
+
+    if(curL === 3){
+        tampilkanRewardFinal(benar, nama, kelas);
+        return;
+    }
 }
         document.getElementById('jaw').value = "";
         document.getElementById('fed').innerHTML = ""; 
@@ -670,6 +690,7 @@ if(curL === 0){
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
