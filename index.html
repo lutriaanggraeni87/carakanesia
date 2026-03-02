@@ -721,10 +721,8 @@ function kirimData(nama, kelas, nilaiPreTest, nilaiPostTest){
 
 // --- Fungsi otomatis dipanggil setelah sesi selesai ---
 function tampilkanRewardFinal(){
+document.getElementById('game').style.display = 'none';
 
-    document.getElementById('game').style.display = 'none';
-
-    // HITUNG BADGE DARI POST TEST
     let badgeNama = hitungBadge(skorPostTest);
 
     let badgeId =
@@ -732,7 +730,6 @@ function tampilkanRewardFinal(){
         (badgeNama === "MADYA") ? "1FKNuoQeRp7LW159tjkUyeOJmc03y2vxa" :
         "1Ut1iYpFXlV1xEKDgYKE6zT6dhimTN8le";
 
-    // TAMPILKAN NILAI PRE & POST
     document.getElementById('teks-badge').innerHTML =
         "Nilai Pretest : <b>" + skorPreTest + "</b><br>" +
         "Nilai Posttest : <b>" + skorPostTest + "</b><br><br>" +
@@ -743,7 +740,6 @@ function tampilkanRewardFinal(){
 
     document.getElementById('hal-reward-2').style.display = 'flex';
 
-    // KIRIM KE SPREADSHEET
     kirimData(nama, kelas, skorPreTest, skorPostTest);
 }
             function masukMenu(){
@@ -755,6 +751,7 @@ function tampilkanRewardFinal(){
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
