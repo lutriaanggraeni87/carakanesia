@@ -501,7 +501,6 @@ function masukMenu() {
     }
 
     function cek() {
-        function cek() {
         if(sudahKlik) return;
         sudahKlik = true; 
 
@@ -524,8 +523,12 @@ function masukMenu() {
             tampilInfo("Nyawa sobung! Coba' pole ghi...");
             setTimeout(() => { location.reload(); }, 1500); return;
         }
-        setTimeout(() => { sk++; muat(); sudahKlik = false; }, 1200); 
-    }
+        setTimeout(() => {
+    sk++;
+    document.getElementById('fed').innerHTML = "";
+    muat();
+    sudahKlik = false;
+}, 1200);
     // 4. CANVAS (MENGGAMBAR)
     function initCanvas() {
         let cv = document.getElementById('paintCanvas');
@@ -690,6 +693,7 @@ if(curL === 0){
     <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
 </body>
 </html>
+
 
 
 
